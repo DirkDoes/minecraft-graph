@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { compareVersions, availableAt, validateGraph, filterGraph, groupEdges, indexGraph, layoutGraph, viewLayers, pickEdge, relationshipPath, nodeKind, nodeBoundaryDistance, nodeContainsPoint, STRUCTURE_CORNER_RATIO, filterKey } from '../core.mjs';
+import { compareVersions, availableAt, validateGraph, filterGraph, groupEdges, indexGraph, layoutGraph, viewLayers, pickEdge, relationshipPath, nodeKind, nodeBoundaryDistance, nodeContainsPoint, SQUARE_CORNER_RATIO, filterKey } from '../core.mjs';
 
 assert.equal(compareVersions('1.21.10', '1.21.9'), 1);
 assert.equal(compareVersions('26.3', '1.21.11'), 1);
@@ -156,19 +156,32 @@ assert.deepEqual(relationshipPath('structure_loot', 'loot'), ['Loot', 'Structure
 assert.equal(viewLayers(world, world.nodes[0].id, 'direct').nodes.some(node => node.kind === 'dimension'), false);
 assert.equal(viewLayers(world, world.nodes[0].id, 'nearby').depth.get(world.nodes[2].id), 2);
 
-const structureNode = world.nodes[0], circleNode = world.nodes[1], radius = 18;
+const [structureNode, biomeNode, dimensionNode] = world.nodes, circleNode = graph.nodes[0], radius = 18;
 assert.equal(nodeContainsPoint(structureNode, radius, 17, 10), true);
+assert.equal(nodeContainsPoint(biomeNode, radius, 17, 10), true);
 assert.equal(nodeContainsPoint(circleNode, radius, 17, 10), false);
 assert.equal(nodeContainsPoint(structureNode, radius, 18, 18), false);
 assert.equal(nodeContainsPoint(structureNode, radius, 19, 0), false);
 assert.equal(nodeBoundaryDistance(structureNode, radius, 1, 0), radius);
 assert.equal(nodeBoundaryDistance(circleNode, radius, 1, 1), radius);
 const diagonal = nodeBoundaryDistance(structureNode, radius, 1, 1);
-assert.ok(Math.abs(diagonal - (radius * (1 - STRUCTURE_CORNER_RATIO) * Math.SQRT2 + radius * STRUCTURE_CORNER_RATIO)) < 1e-10);
-// Curve endpoints and the hit area agree at straight edges and rounded corners.
-for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 24) {
-  const x = Math.cos(angle), y = Math.sin(angle), boundary = nodeBoundaryDistance(structureNode, radius, x, y);
-  assert.equal(nodeContainsPoint(structureNode, radius, x * (boundary - .001), y * (boundary - .001)), true);
-  assert.equal(nodeContainsPoint(structureNode, radius, x * (boundary + .001), y * (boundary + .001)), false);
+assert.ok(Math.abs(diagonal - (radius * (1 - SQUARE_CORNER_RATIO) * Math.SQRT2 + radius * SQUARE_CORNER_RATIO)) < 1e-10);
+assert.equal(nodeContainsPoint(dimensionNode, radius, 0, 0), true);
+assert.equal(nodeContainsPoint(dimensionNode, radius, 0, -17), true);
+assert.equal(nodeContainsPoint(dimensionNode, radius, 0, 17), false);
+assert.equal(nodeContainsPoint(dimensionNode, radius, 18, 0), false);
+for (let i = 0; i < 10; i++) {
+  const angle = -Math.PI / 2 + i * Math.PI / 5;
+  const boundary = nodeBoundaryDistance(dimensionNode, radius, Math.cos(angle), Math.sin(angle));
+  assert.ok(Math.abs(boundary - radius * (i % 2 ? .5 : 1)) < 1e-10);
 }
-console.log('World generation checks passed: new node filters, two-hop dimensions, spawn semantics, rounded-square clipping and hit areas.');
+// Curve endpoints and hit areas agree around rounded corners, star tips and notches.
+for (const shape of [structureNode, biomeNode, dimensionNode]) for (let i = 0; i < 360; i++) {
+  const angle = i * Math.PI / 180, x = Math.cos(angle), y = Math.sin(angle);
+  const boundary = nodeBoundaryDistance(shape, radius, x, y);
+  assert.ok(Number.isFinite(boundary));
+  assert.equal(nodeContainsPoint(shape, radius, x * (boundary - .001), y * (boundary - .001)), true);
+  assert.equal(nodeContainsPoint(shape, radius, x * (boundary + .001), y * (boundary + .001)), false);
+  if (shape === biomeNode) assert.equal(boundary, nodeBoundaryDistance(structureNode, radius, x, y));
+}
+console.log('World generation checks passed: new node filters, two-hop dimensions, spawn semantics, rounded-square and star clipping and hit areas.');

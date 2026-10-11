@@ -22,22 +22,42 @@ export function availableAt(entity, version) {
 }
 
 export const nodeKind = node => node.kind || 'item';
-export const STRUCTURE_CORNER_RATIO = .28;
+export const SQUARE_CORNER_RATIO = .28;
+export const DIMENSION_STAR_POINTS = Array.from({ length: 10 }, (_, i) => {
+  const angle = -Math.PI / 2 + i * Math.PI / 5, radius = i % 2 ? .5 : 1;
+  return [Math.cos(angle) * radius, Math.sin(angle) * radius];
+});
 
 export function nodeBoundaryDistance(node, radius, dx, dy) {
-  if (nodeKind(node) !== 'structure' || (!dx && !dy)) return radius;
+  const kind = nodeKind(node);
+  if (!dx && !dy) return radius;
+  if (kind === 'dimension') {
+    const length = Math.hypot(dx, dy), x = dx / length, y = dy / length;
+    let distance = Infinity;
+    for (let i = 0; i < DIMENSION_STAR_POINTS.length; i++) {
+      const [ax, ay] = DIMENSION_STAR_POINTS[i], [bx, by] = DIMENSION_STAR_POINTS[(i + 1) % DIMENSION_STAR_POINTS.length];
+      const sx = bx - ax, sy = by - ay, cross = x * sy - y * sx;
+      if (Math.abs(cross) < 1e-10) continue;
+      const alongRay = (ax * sy - ay * sx) / cross, alongSide = (ax * y - ay * x) / cross;
+      if (alongRay >= 0 && alongSide >= -1e-10 && alongSide <= 1 + 1e-10) distance = Math.min(distance, alongRay);
+    }
+    return distance * radius;
+  }
+  if (kind !== 'structure' && kind !== 'biome') return radius;
   const length = Math.hypot(dx, dy), x = Math.abs(dx) / length, y = Math.abs(dy) / length;
-  const side = radius / Math.max(x, y), corner = radius * STRUCTURE_CORNER_RATIO, center = radius - corner;
+  const side = radius / Math.max(x, y), corner = radius * SQUARE_CORNER_RATIO, center = radius - corner;
   if (Math.min(x, y) * side <= center) return side;
   const projection = center * (x + y);
   return projection + Math.sqrt(Math.max(0, projection ** 2 - 2 * center ** 2 + corner ** 2));
 }
 
 export function nodeContainsPoint(node, radius, dx, dy) {
-  if (nodeKind(node) !== 'structure') return Math.hypot(dx, dy) <= radius;
+  const kind = nodeKind(node);
+  if (kind === 'dimension') return Math.hypot(dx, dy) <= nodeBoundaryDistance(node, radius, dx, dy);
+  if (kind !== 'structure' && kind !== 'biome') return Math.hypot(dx, dy) <= radius;
   const x = Math.abs(dx), y = Math.abs(dy);
   if (x > radius || y > radius) return false;
-  const corner = radius * STRUCTURE_CORNER_RATIO, center = radius - corner;
+  const corner = radius * SQUARE_CORNER_RATIO, center = radius - corner;
   return Math.max(0, x - center) ** 2 + Math.max(0, y - center) ** 2 <= corner ** 2;
 }
 

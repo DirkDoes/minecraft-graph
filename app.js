@@ -1,4 +1,4 @@
-import { availableAt, validateGraph, filterGraph, groupEdges, indexGraph, recipeType, relationshipPath, nodeKind, nodeBoundaryDistance, nodeContainsPoint, STRUCTURE_CORNER_RATIO, edgeCategory, relationKey, filterKey, viewLayers, pickEdge } from './core.mjs';
+import { availableAt, validateGraph, filterGraph, groupEdges, indexGraph, recipeType, relationshipPath, nodeKind, nodeBoundaryDistance, nodeContainsPoint, SQUARE_CORNER_RATIO, DIMENSION_STAR_POINTS, edgeCategory, relationKey, filterKey, viewLayers, pickEdge } from './core.mjs';
 
 const $ = id => document.getElementById(id);
 const canvas = $('graph'), ctx = canvas.getContext('2d');
@@ -79,7 +79,9 @@ function icon(node, className = '') {
   }
   const kind = nodeKind(node || {});
   if (['structure', 'biome', 'dimension'].includes(kind)) {
-    const badge = element('span', `world-icon ${kind}-icon ${className}`); badge.setAttribute('aria-hidden', 'true'); badge.append(img); return badge;
+    const badge = element('span', `world-icon ${kind}-icon ${className}`); badge.setAttribute('aria-hidden', 'true'); badge.append(img);
+    if (kind === 'dimension') badge.style.clipPath = `polygon(${DIMENSION_STAR_POINTS.map(([x, y]) => `${(x + 1) * 50}% ${(y + 1) * 50}%`).join(',')})`;
+    return badge;
   }
   return img;
 }
@@ -630,7 +632,13 @@ function nodePath(node, position, radius) {
       if (side) ctx.lineTo(x, y); else ctx.moveTo(x, y);
     }
     ctx.closePath();
-  } else if (nodeKind(node) === 'structure') ctx.roundRect(position.x - radius, position.y - radius, radius * 2, radius * 2, radius * STRUCTURE_CORNER_RATIO);
+  } else if (nodeKind(node) === 'dimension') {
+    DIMENSION_STAR_POINTS.forEach(([x, y], i) => {
+      if (i) ctx.lineTo(position.x + x * radius, position.y + y * radius);
+      else ctx.moveTo(position.x + x * radius, position.y + y * radius);
+    });
+    ctx.closePath();
+  } else if (['structure', 'biome'].includes(nodeKind(node))) ctx.roundRect(position.x - radius, position.y - radius, radius * 2, radius * 2, radius * SQUARE_CORNER_RATIO);
   else ctx.arc(position.x, position.y, radius, 0, Math.PI * 2);
 }
 
@@ -711,7 +719,8 @@ function draw() {
     ctx.lineWidth = (selected || hovered ? 1.8 : .8) / camera.zoom; ctx.stroke();
     if (showImage) {
       const image = nodeImage(node);
-      if (image) ctx.drawImage(image, position.x - geometry.imageSize / 2, position.y - geometry.imageSize / 2, geometry.imageSize, geometry.imageSize);
+      const imageSize = nodeKind(node) === 'dimension' ? geometry.imageSize * .7 : geometry.imageSize;
+      if (image) ctx.drawImage(image, position.x - imageSize / 2, position.y - imageSize / 2, imageSize, imageSize);
       else { ctx.fillStyle = '#b8c9e0'; ctx.fillRect(position.x - 5, position.y - 5, 10, 10); }
     }
     if (camera.zoom >= .85 || selected || hovered || geometry.focused) labels.push({ node, position, highlighted, radius, focused: geometry.focused });
@@ -766,7 +775,7 @@ function hitNode(point) {
     const p = state.positions.get(node.id); if (!p) continue;
     const geometry = focusGeometry(node.id), radius = geometry.focused ? geometry.radius + 2 / state.camera.zoom : Math.max(20, (mobile.matches ? 22 : 9) / state.camera.zoom);
     const d = Math.hypot(p.x - world.x, p.y - world.y);
-    if (d < distance && nodeContainsPoint(node, radius, p.x - world.x, p.y - world.y)) { closest = node; distance = d; }
+    if (d < distance && nodeContainsPoint(node, radius, world.x - p.x, world.y - p.y)) { closest = node; distance = d; }
   }
   return closest;
 }
