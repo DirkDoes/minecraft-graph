@@ -148,7 +148,8 @@ def generate_extended_reports(args, version):
     classpath = (CACHE / 'classpath.txt').read_text(encoding='utf-8').strip()
     for script_name, report_name in [('ExportMobGeometry.java', 'mob-models.json'), ('ExportGatheringMetadata.java', 'gathering-metadata.json'),
                                      ('ExportEffectMetadata.java', 'effect-metadata.json'), ('ExportInteractionMetadata.java', 'interaction-metadata.json'),
-                                     ('ExportPlantMetadata.java', 'plant-metadata.json')]:
+                                     ('ExportPlantMetadata.java', 'plant-metadata.json'), ('ExportBiomeMetadata.java', 'biome-metadata.json'),
+                                     ('ExportStructureMetadata.java', 'structure-metadata.json')]:
         script = ROOT / 'scripts' / script_name
         report = CACHE / report_name
         stamp = CACHE / (report_name + '.source-sha1')
@@ -339,6 +340,8 @@ def build_graph(version, reports):
         from plant_relations import build_plants
         from mob_behavior_relations import build_mob_behaviors
         from experience_relations import build_experience
+        from biome_relations import build_biomes
+        from structure_relations import build_structures
         categories = build_categories(game, recipes, version)
         mobs = build_mobs(game, version)
         gathering = build_gathering(game, version, mobs["nodes"])
@@ -348,8 +351,10 @@ def build_graph(version, reports):
         plants = build_plants(game, version, existing_nodes)
         mob_behaviors = build_mob_behaviors(game, version, existing_nodes)
         experience = build_experience(game, recipes, version, existing_nodes, interactions["edges"])
+        biomes = build_biomes(game, version, existing_nodes + experience["nodes"])
+        structures = build_structures(game, version, existing_nodes + experience["nodes"] + biomes["nodes"])
         item_edges = build_edges(recipes, game.items)
-        additions = [categories, mobs, gathering, effects, interactions, plants, mob_behaviors, experience]
+        additions = [categories, mobs, gathering, effects, interactions, plants, mob_behaviors, experience, biomes, structures]
         for node in nodes:
             capabilities = {}
             for part in (effects, interactions):
@@ -363,8 +368,9 @@ def build_graph(version, reports):
                  "edges": item_edges + [edge for part in additions for edge in part["edges"]],
                  "coverage": {"categories": categories["coverage"], "mobs": mobs["coverage"], "gathering": gathering["coverage"],
                               "effects": effects["coverage"], "interactions": interactions["coverage"], "plants": plants["coverage"],
-                              "mobBehaviors": mob_behaviors["coverage"], "experience": experience["coverage"]}}
-        artwork_sources = b"".join((ROOT / "scripts" / name).read_bytes() for name in ("render_icons.py", "render_blocks.py", "render_mobs.py", "effect_relations.py", "experience_relations.py", "ExportItemGeometry.java", "ExportMobGeometry.java"))
+                              "mobBehaviors": mob_behaviors["coverage"], "experience": experience["coverage"],
+                              "biomes": biomes["coverage"], "structures": structures["coverage"]}}
+        artwork_sources = b"".join((ROOT / "scripts" / name).read_bytes() for name in ("render_icons.py", "render_blocks.py", "render_mobs.py", "effect_relations.py", "experience_relations.py", "biome_relations.py", "structure_relations.py", "ExportItemGeometry.java", "ExportMobGeometry.java"))
         graph["assetRevision"] = hashlib.sha1(artwork_sources + version.encode()).hexdigest()[:12]
         node_ids = {node["id"] for node in graph["nodes"]}
         record_ids = {record["id"] for record in graph["recipes"] + graph["relationships"]}
@@ -376,7 +382,9 @@ def build_graph(version, reports):
                 raise ValueError(f"Invalid graph edge: {edge['id']}")
             edge_ids.add(edge["id"])
         graph["counts"] = {"items": len(nodes), "nodes": len(graph["nodes"]), "categories": len(categories["nodes"]), "mobs": len(mobs["nodes"]),
-                           "blocks": len(gathering["nodes"]), "effects": len(effects["nodes"]), "entities": len(experience["nodes"]), "vanillaRecipeFiles": len(paths), "supplementalRecipes": len(recipes) - len(paths),
+                           "blocks": sum(node["kind"] == "block" for node in graph["nodes"]), "effects": len(effects["nodes"]), "entities": len(experience["nodes"]),
+                           "biomes": sum(node["kind"] == "biome" for node in graph["nodes"]), "dimensions": sum(node["kind"] == "dimension" for node in graph["nodes"]),
+                           "structures": sum(node["kind"] == "structure" for node in graph["nodes"]), "vanillaRecipeFiles": len(paths), "supplementalRecipes": len(recipes) - len(paths),
                            "recipes": len(recipes), "relationships": len(graph["relationships"]), "itemRecipeEdges": len(item_edges), "edges": len(graph["edges"])}
         return graph
 
@@ -395,7 +403,7 @@ def main():
     provenance["coverage"] = graph["coverage"]
     provenance["nodeTypes"] = dict(sorted(Counter(node["kind"] for node in graph["nodes"]).items()))
     provenance["relationshipTypes"] = dict(sorted(Counter(record["type"] for record in graph["relationships"]).items()))
-    provenance["limitations"][3] = "Renaming, enchanting-table rolls, villager trading, structures, biomes, chest loot and a complete world simulation are not included. Game-derived loot, gathering, status effects and documented item/mob interactions are included."
+    provenance["limitations"][3] = "Renaming, enchanting-table rolls, villager trading and a complete world simulation are not included. Registered structures, biome and dimension membership, structure loot and possible generation outputs are included; these describe generation rules, not the contents of any particular seed."
     write_json(ROOT / "data" / "graph.json", graph)
     write_json(ROOT / "data" / "provenance.json", provenance)
     print(json.dumps(graph["counts"]))

@@ -37,6 +37,11 @@ def render_block(renderer, block_id, state):
         if slug in ("water", "lava"):
             cube = renderer.model("minecraft:block/cube_all")
             model = {**cube, "textures": {**cube["textures"], "all": f"minecraft:block/{slug}_still"}}
+        if slug in ("end_portal", "end_gateway"):
+            # shortcut: use the game's portal texture and runtime box; bake its layered shader when animated icons are needed.
+            cube = renderer.model("minecraft:block/cube_all")
+            element = {**cube["elements"][0], "from": [0, 6 if slug == "end_portal" else 0, 0], "to": [16, 12 if slug == "end_portal" else 16, 16]}
+            model = {**cube, "elements": [element], "textures": {**cube["textures"], "all": "minecraft:entity/end_portal/end_portal"}}
         transform = rotation([entry.get("x", 0), entry.get("y", 0), 0])
         for points, uv, normal, texture, color in renderer.block_faces(model, [np.array([.48, .72, .32])]):
             if slug == "water":
@@ -86,7 +91,8 @@ def main():
     report = {"version": graph["version"], "clientSha1": hashlib.sha1((ROOT / ".cache/client.jar").read_bytes()).hexdigest(),
               "count": len(records), "blocks": records, "sourceTextures": sorted(renderer.used_textures),
               "limitations": ["Static default block state and first animation frame; one deterministic model alternative.",
-                              "Plant biome tint uses representative green. Fluids use their real still texture on a simplified cube; Water uses the game's Plains water tint."]}
+                              "Plant biome tint uses representative green. Fluids use their real still texture on a simplified cube; Water uses the game's Plains water tint.",
+                              "End Portal/Gateway use their real portal texture and runtime box geometry without the animated layered shader."]}
     (output / "coverage.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(f"Rendered {len(records)} real block icons")
 

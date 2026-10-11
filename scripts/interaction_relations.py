@@ -129,6 +129,20 @@ def build_interactions(game, version, existing_nodes):
         "mob_building:wither", category="spawning", source_class="net.minecraft.world.level.block.WitherSkullBlock", ingredients=[{"items": sand, "count": 4}, {"items": ["minecraft:wither_skeleton_skull"], "count": 3}], conditions=["Difficulty not Peaceful", "Valid T-shaped construction with surrounding space"])
     add("creaking_heart_spawn", ["minecraft:creaking_heart"], [mob("creaking")], "An awake heart between two aligned Pale Oak Logs can create one linked Creaking near it. Requires the environment's Creaking Active attribute (normally nighttime), monster spawning, non-Peaceful difficulty, a player within 32 blocks and a valid spawn position. The heart remains.",
         "creaking_heart_spawn", category="spawning", source_class="net.minecraft.world.level.block.entity.CreakingHeartBlockEntity", conditions=["Heart awake and aligned between Pale Oak Logs", "Creaking Active environment attribute", "Monster spawning enabled", "Difficulty not Peaceful", "Player within 32 blocks", "No existing linked protector"])
+    add("mob_summoning", ["minecraft:sculk_shrieker"], [mob("warden")],
+        "A placed Sculk Shrieker with can_summon=true can summon a Warden after player-attributed activation raises the shared warning level to 4. It must not already be shrieking; difficulty must not be Peaceful and spawn_wardens must be enabled. Warnings are blocked by a nearby Warden or any participating player's 200-tick warning cooldown. After the 90-tick shriek, the game tries up to 20 nearby positions with a full upper collision face beneath, no liquid and enough unobstructed space. Ordinary player-placed shriekers have can_summon=false and cannot summon one; the block is not consumed.",
+        "sculk_shrieker_warden", category="spawning", source_class="net.minecraft.world.level.block.entity.SculkShriekerBlockEntity / net.minecraft.world.entity.monster.warden.WardenSpawnTracker / net.minecraft.util.SpawnUtil",
+        requiredBlockState={"block": "minecraft:sculk_shrieker", "can_summon": True}, warningLevelRequired=4,
+        warningIncreaseCooldownTicks=200, warningDecayIntervalTicks=12000, sharedWarningPlayerRadius=16,
+        nearbyWardenCheckCube=[48, 48, 48], responseDelayTicks=90, spawnAttempts=20, spawnRangeXZ=5, spawnRangeY=6,
+        activation={"stepping": "A player or entity attributable to a player steps on the block",
+                    "vibrationEvent": "minecraft:sculk_sensor_tendrils_clicking", "vibrationListenerRadius": 8,
+                    "vibrationChecks": "Player-attributed event, no vibration occlusion, adjacent chunks ticking"},
+        conditions=["Placed block state can_summon=true", "Not already shrieking at activation", "Player-attributed stepping or accepted sensor vibration",
+                    "Difficulty not Peaceful", "Game rule minecraft:spawn_wardens=true", "No Warden in the 48×48×48 check cube around the shrieker",
+                    "No warning cooldown among the triggering player and participating alive non-spectator players within 16 blocks",
+                    "Shared warning level reaches 4", "Response follows the 90-tick shriek or removal while shrieking",
+                    "A candidate position within the world border has a full upper collision face beneath, no liquid, and unobstructed Warden geometry"])
     add("mob_summoning", [mob("evoker")], [mob("vex")], "An Evoker's summoning spell creates three Vexes with limited lives. The spell's cooldown and nearby Vex count affect whether it casts.", "evoker_vex", category="spawning", source_class="net.minecraft.world.entity.monster.illager.Evoker$EvokerSummonSpellGoal", count=3)
     for slug in ["slime", "magma_cube"]:
         add("mob_splitting", [mob(slug)], [mob(slug)], "On death, a mob larger than size 1 splits into 2–4 children of half its size; the parent is removed. Size-1 mobs do not split.", "mob_splitting:" + slug, category="spawning", source_class="net.minecraft.world.entity.monster.cubemob.AbstractCubeMob", conditions=["Dying parent size greater than 1"], count={"min": 2, "max": 4})

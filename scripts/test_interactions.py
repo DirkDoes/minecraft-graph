@@ -82,6 +82,21 @@ class InteractionTests(unittest.TestCase):
             self.assertIn((copper_id, chest_id, "construction_side_product"), self.directions)
         self.assertFalse(any(record["type"] in {"mob_waxing", "mob_scraping", "statue_conversion", "statue_awakening"} for record in self.records.values()))
 
+    def test_sculk_shrieker_warden_requires_natural_summoning_state_and_warning(self):
+        self.assertIn(("minecraft:sculk_shrieker", "mob:minecraft:warden", "mob_summoning"), self.directions)
+        record = self.records["interaction:sculk_shrieker_warden"]
+        self.assertEqual(record["category"], "spawning")
+        self.assertEqual(record["requiredBlockState"], {"block": "minecraft:sculk_shrieker", "can_summon": True})
+        self.assertEqual(record["warningLevelRequired"], 4)
+        self.assertEqual(record["warningIncreaseCooldownTicks"], 200)
+        self.assertEqual(record["nearbyWardenCheckCube"], [48, 48, 48])
+        self.assertEqual((record["spawnAttempts"], record["spawnRangeXZ"], record["spawnRangeY"]), (20, 5, 6))
+        self.assertTrue(any("spawn_wardens=true" in condition for condition in record["conditions"]))
+        self.assertTrue(any("Peaceful" in condition for condition in record["conditions"]))
+        self.assertTrue(any("no liquid" in condition for condition in record["conditions"]))
+        self.assertIn("player-placed shriekers have can_summon=false", record["note"])
+        self.assertEqual({edge["source"] for edge in self.part["edges"] if edge["relationId"] == record["id"]}, {"minecraft:sculk_shrieker"})
+
     def test_tools_food_and_state_changes(self):
         for source, target, kind in [("minecraft:shears", "mob:minecraft:sheep", "shearing_tool"), ("minecraft:shears", "minecraft:beehive", "harvesting_tool"),
                                      ("minecraft:glass_bottle", "minecraft:beehive", "harvesting_tool"), ("minecraft:campfire", "minecraft:beehive", "smoking_bees"),

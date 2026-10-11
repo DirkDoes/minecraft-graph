@@ -1,6 +1,6 @@
 # Minecraft Atlas
 
-An interactive knowledge graph for **Minecraft Java Edition 26.3**: items, categories, mobs, status effects, recipes, loot, gathering and interactions. The latest stable release was verified against Mojang's version manifest on 11 October 2026; the installed client jar matches its official SHA1.
+An interactive knowledge graph for **Minecraft Java Edition 26.3**: items, categories, mobs, status effects, structures, biomes, dimensions, recipes, loot, gathering and interactions. The latest stable release was verified against Mojang's version manifest on 11 October 2026; the installed client jar matches its official SHA1.
 
 ## Open the app
 
@@ -16,11 +16,11 @@ node server.mjs
 
 Open **http://127.0.0.1:3000**. `npm start` does the same thing. No package installation, Minecraft login, or internet connection is needed to use the app. Keep the terminal running; press Ctrl+C to stop. Use localhost rather than opening `index.html` directly, because the browser needs to load modules, graph data, and a layout worker.
 
-Search any node: results identify items, categories, mobs, blocks and status effects. Categories have hexagonal badges and graph nodes; other nodes are circular. Selecting a search result opens **Direct**, arranges its neighborhood, and fits it on screen. Drag the canvas to pan, scroll to zoom, and drag a node to move it. `/` focuses search; arrows pan and plus/minus zoom on the canvas. **All** shows the full graph; **Direct** hides unrelated nodes and connections; **Nearby** adds a faded second hop. Both local views rearrange automatically. **Rearrange** lays out the visible graph again, and **Fit** adjusts its zoom. Select a node before picking one of its incident edges; ambiguous overlapping curves cannot be picked.
+Search any node: results identify its kind, including structures, biomes and dimensions. Categories have hexagonal badges and graph nodes; structures are rounded squares, and other nodes are circular. Selecting a search result opens **Direct**, arranges its neighborhood, and fits it on screen. Drag the canvas to pan, scroll to zoom, and drag a node to move it. `/` focuses search; arrows pan and plus/minus zoom on the canvas. **All** shows the full graph; **Direct** hides unrelated nodes and connections; **Nearby** adds a faded second hop. Both local views rearrange automatically. **Rearrange** lays out the visible graph again, and **Fit** adjusts its zoom. Select a node before picking one of its incident edges; ambiguous overlapping curves cannot be picked.
 
 On phones, the graph fills the screen. **Search nodes** and **Filters** open touch-sized bottom panels; selecting a search result returns to the graph. Tap the selected node's **Details** strip to inspect relationships, then close the panel to continue exploring with the selection intact. Drag to pan and pinch to zoom. Desktop sidebars keep their existing layout.
 
-The left sidebar contains the version and checkbox trees. **Recipes → Crafting** includes shaped, shapeless and special crafting recipes; other stations have their own branches. Disabling a parent disables every child. Membership, Gathering, Loot, Uses, Status effects, Spawning, Interactions and Experience are separate roots. Spawn eggs, buckets, constructed mobs and status-effect spawning can be filtered separately. **Show self-loops** starts off; it hides edges from a node to itself without deleting their records. Node filters include every represented kind, including **Other entities** for the Experience Orb. Loose nodes keep their grid layout without a surrounding box or title.
+The left sidebar contains the version and checkbox trees. **Recipes → Crafting** includes shaped, shapeless and special crafting recipes; other stations have their own branches. Disabling a parent disables every child. Membership, Gathering, Loot, Uses, Status effects, Spawning, Interactions, Experience and World generation are separate roots. World generation separates structure contents and biome rules; structure loot appears under Loot. Spawn eggs, buckets, constructed mobs and status-effect spawning can be filtered separately. **Show self-loops** starts off; it hides edges from a node to itself without deleting their records. Node filters include every represented kind, including **Other entities** for the Experience Orb. Loose nodes keep their grid layout without a surrounding box or title.
 
 ## Included data
 
@@ -29,15 +29,18 @@ The left sidebar contains the version and checkbox trees. **Recipes → Crafting
 | Registered item IDs, including Air | 1,658 |
 | Official item-tag categories | 236 |
 | Actual mob types | 90 |
-| Additional blocks without inventory items | 70 |
+| Additional blocks without inventory items | 73 |
 | Registered status effects plus Burning | 41 |
 | Additional non-mob entities (Experience Orb) | 1 |
+| Structure nodes (52 registered, 10 feature sites, 3 End fight sites) | 65 |
+| Registered biomes | 67 |
+| Dimensions | 3 |
 | Official recipe JSON files | 2,042 |
 | Additional workstation operations | 1,140 |
 | Total recipe records | 3,182 |
 | Original directed item recipe connections | 25,594 |
-| Generic relationship records | 4,951 |
-| Total directed connections | 46,319 |
+| Generic relationship records | 13,830 |
+| Total directed connections | 55,198 |
 
 The inventory comes from the game's own data generator and item registry, so unobtainable items and items without recipes remain present. Every recipe JSON in the verified client is retained and mapped, including crafting, cooking, stonecutting, smithing, brewing, and dynamic crafting serializers. Nested item tags expand to their actual alternatives. Shaped layouts, input/output quantities, optional ingredients, potion predicates, and component-dependent conditions remain attached to recipe records.
 
@@ -56,6 +59,10 @@ All 40 registered status effects have official icons and game-derived metadata; 
 Uses and spawning include actual spawn-egg and mob-bucket mappings, thrown eggs, constructed golems/Withers, Creaking Hearts, egg blocks, feeding, breeding, taming, healing, equipment, fuels, mining rules, block transformations, copper waxing/weathering and tool-target interactions. Mob behaviors include conversions, infection, predators, repellents, pollination, hive use and copper golem statue activation. Bone Meal targets come from all registered `BonemealableBlock` implementations, and crop-growing links retain their conditional harvest loot. Edible, equippable and placeable capabilities appear in node details without inventing Player or action nodes. A food component used by mobs does not necessarily mean the player can eat the item. Multi-input requirements, alternatives, world state and game rules remain on the full relationship records.
 
 Experience Orbs are non-mob entities. Conditional XP sources include qualifying mob kills, mining, all positive-XP furnace/blast-furnace/smoker recipes, breeding, fishing, Bottles o' Enchanting and grindstone disenchanting. Campfire cooking grants no XP, and mobs with zero death XP have no kill link. Living coral, coral fans (including wall states) and coral blocks point to the matching dead form when their placed water check fails; there is no reverse revival link. Coral targets and ordinary block XP ranges come directly from the registered game classes. Custom XP rules and the zero-XP mob exceptions are audited for 26.3.
+
+World generation uses the game's structure definitions, reachable templates and pools, biome features, terrain material rules and biome sources. Structures point to their allowed biomes; biomes point to their dimensions. There is no direct structure-to-dimension shortcut. Structure blocks, container loot and archaeology stay attached to the structure. Natural terrain and decoration point from the biome to their possible blocks; a structure's contents alone never create a biome-to-block link. Structure-like decoration features such as monster rooms and geodes also have structure nodes.
+
+Mob relationships distinguish **Generated residents**, **Spawner mobs** and **Natural spawning overrides** from ordinary **Biome spawning**. A fortress can have both Blaze spawner and natural-spawning links. Ancient City reaches Warden through Sculk Shrieker summoning, with its activation, warning and spawning conditions; Warden is not an initially generated city resident. Loot relationships preserve container/table attribution and conditional selection rules. These are possible outputs: terrain checks, random choices, template processors, height, difficulty and other recorded conditions still apply. Biome and dimension badges use representative game blocks, and structure badges use representative contents. The optional starter bonus chest is outside this structure inventory.
 
 [data/provenance.json](data/provenance.json) records sources, checksum, counts, and coverage limits. [Mojang's release notes](https://www.minecraft.net/en-us/article/minecraft-java-edition-26-3) describe this version.
 
@@ -77,7 +84,7 @@ All nodes and relationships are loaded. View modes and filters make dense region
 
 An entity appears when `minVersion <= selectedVersion <= maxVersion`; `null` means no known upper bound. Comparisons are numeric, so `26.10` sorts after `26.3`. Endpoint availability and the recipe's interval also constrain edges. Only 26.3 is loaded today. The lower bound describes the start of this dataset's coverage, **not historical introduction dates**.
 
-Recipe edges use `category: "recipe"`, a specific `type` such as `smelting` or `loom`, and `recipeId` referring to the full recipe. Other edges use `relationId`, with categories including `membership`, `gathering`, `loot`, `uses`, `spawning` and `effects`. Each edge has exactly one record reference. Nodes have `kind: "item" | "category" | "mob" | "block" | "effect"`; IDs use distinct namespaces (`minecraft:oak_planks`, `tag:minecraft:planks`, `mob:minecraft:skeleton`, `block:minecraft:water`, `effect:minecraft:hunger`). Burning uses `effect:state:burning`. Endpoint/record availability, selected node kinds, category-qualified relationship filters and the self-loop toggle all constrain visible edges.
+Recipe edges use `category: "recipe"`, a specific `type` such as `smelting` or `loom`, and `recipeId` referring to the full recipe. Other edges use `relationId`, with categories including `membership`, `gathering`, `loot`, `uses`, `spawning`, `effects` and `worldgen`. Each edge has exactly one record reference. Node kinds are `item`, `category`, `mob`, `block`, `effect`, `entity`, `structure`, `biome` and `dimension`; IDs use distinct namespaces (`minecraft:oak_planks`, `tag:minecraft:planks`, `mob:minecraft:skeleton`, `block:minecraft:water`, `effect:minecraft:hunger`, `structure:minecraft:fortress`, `biome:minecraft:nether_wastes`, `dimension:minecraft:the_nether`). Burning uses `effect:state:burning`. Endpoint/record availability, selected node kinds, category-qualified relationship filters and the self-loop toggle all constrain visible edges.
 
 Recipes contain ingredient groups with `items` alternatives and quantities, and result records with item IDs/counts. Dynamic recipes carry conditions; official recipes retain raw game JSON. Generic records retain their inputs/outputs, notes and source metadata; loot records preserve the game's conditional selection data. Future relationship categories and version snapshots can use the same interval fields; importing historical data or editing graph records through a UI is not implemented.
 
@@ -89,7 +96,7 @@ Prebuilt data and icons are included. Extraction uses Python with Pillow and Jav
 python scripts/extract_data.py --java "C:\Program Files\Java\jdk-25.0.2\bin\java.exe"
 ```
 
-The extractor refreshes Mojang metadata, reuses a local client only after checksum verification, and otherwise downloads the official client and required libraries into `.cache`. It runs the Java mob geometry, block/stew mapping, effect/potion, interaction and plant exporters when reports are missing or their source/jar changes. `--minecraft-dir` selects a different launcher directory; `--offline` reuses verified cached inputs. Unknown recipe serializers, loot entries and consume effects fail explicitly. Supplemental workstation and interaction triggers are audited for 26.3 and reject another release until reviewed. Python extraction needs Pillow for the static Burning icon; full model baking also needs NumPy.
+The extractor refreshes Mojang metadata, reuses a local client only after checksum verification, and otherwise downloads the official client and required libraries into `.cache`. It runs the Java mob geometry, block/stew mapping, effect/potion, interaction, plant, biome and structure exporters when reports are missing or their source/jar changes. `--minecraft-dir` selects a different launcher directory; `--offline` reuses verified cached inputs. Unknown recipe serializers, loot entries and consume effects fail explicitly. Supplemental workstation and interaction triggers are audited for 26.3 and reject another release until reviewed. Python extraction needs Pillow for generated icons; full model baking also needs NumPy.
 
 Then regenerate icons using the resolved game classpath:
 
@@ -111,4 +118,4 @@ python -m unittest discover -s tests -p test_icons.py
 
 Minecraft names, textures, models, and game data belong to Mojang/Microsoft. This is an unofficial local project.
 
-The inventories of recipes, tags, effect registries, referenced tool rules, block transformers and the documented component mappings are checked exhaustively. Hand-coded interactions are audited finite rules, **not a claim that every possible emergent Minecraft interaction is enumerated**. Arbitrary customized stacks/equipment, world simulation, structures, biomes, dimensions, chest loot and villager trade offers remain outside this update. Detailed coverage and any omitted existing-node mappings are in `data/provenance.json`.
+The inventories of recipes, tags, effect registries, referenced tool rules, block transformers and the documented component mappings are checked exhaustively. Hand-coded interactions are audited finite rules, **not a claim that every possible emergent Minecraft interaction is enumerated**. World generation links describe possible outputs and placement rules, not the contents of a particular seed. Arbitrary customized stacks/equipment, complete world simulation and villager trade offers remain outside this update. Detailed coverage and any omitted existing-node mappings are in `data/provenance.json`.

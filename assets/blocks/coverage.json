@@ -1,7 +1,7 @@
 {
   "version": "26.3",
   "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
-  "count": 70,
+  "count": 73,
   "blocks": {
     "minecraft:attached_melon_stem": {
       "state": {
@@ -651,6 +651,34 @@
           "model": "minecraft:block/lava"
         }
       ]
+    },
+    "minecraft:piston_head": {
+      "state": {
+        "type": "normal",
+        "facing": "north",
+        "short": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/piston_head"
+        }
+      ]
+    },
+    "minecraft:end_portal": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/end_portal"
+        }
+      ]
+    },
+    "minecraft:end_gateway": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/end_gateway"
+        }
+      ]
     }
   },
   "sourceTextures": [
@@ -712,6 +740,8 @@
     "assets/minecraft/textures/block/pale_oak_sapling.png",
     "assets/minecraft/textures/block/pink_candle.png",
     "assets/minecraft/textures/block/pink_tulip.png",
+    "assets/minecraft/textures/block/piston_side.png",
+    "assets/minecraft/textures/block/piston_top.png",
     "assets/minecraft/textures/block/poplar_sapling.png",
     "assets/minecraft/textures/block/poppy.png",
     "assets/minecraft/textures/block/potted_azalea_bush_plant.png",
@@ -737,10 +767,12 @@
     "assets/minecraft/textures/block/white_candle.png",
     "assets/minecraft/textures/block/white_tulip.png",
     "assets/minecraft/textures/block/wither_rose.png",
-    "assets/minecraft/textures/block/yellow_candle.png"
+    "assets/minecraft/textures/block/yellow_candle.png",
+    "assets/minecraft/textures/entity/end_portal/end_portal.png"
   ],
   "limitations": [
     "Static default block state and first animation frame; one deterministic model alternative.",
-    "Plant biome tint uses representative green. Fluids use their real still texture on a simplified cube; Water uses the game's Plains water tint."
+    "Plant biome tint uses representative green. Fluids use their real still texture on a simplified cube; Water uses the game's Plains water tint.",
+    "End Portal/Gateway use their real portal texture and runtime box geometry without the animated layered shader."
   ]
 }

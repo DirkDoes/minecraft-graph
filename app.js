@@ -1,4 +1,4 @@
-import { availableAt, validateGraph, filterGraph, groupEdges, indexGraph, recipeType, relationshipPath, nodeKind, edgeCategory, relationKey, filterKey, viewLayers, pickEdge } from './core.mjs';
+import { availableAt, validateGraph, filterGraph, groupEdges, indexGraph, recipeType, relationshipPath, nodeKind, nodeBoundaryDistance, nodeContainsPoint, STRUCTURE_CORNER_RATIO, edgeCategory, relationKey, filterKey, viewLayers, pickEdge } from './core.mjs';
 
 const $ = id => document.getElementById(id);
 const canvas = $('graph'), ctx = canvas.getContext('2d');
@@ -76,6 +76,10 @@ function icon(node, className = '') {
   img.addEventListener('error', () => { img.style.visibility = 'hidden'; }, { once: true });
   if (nodeKind(node || {}) === 'category') {
     const hexagon = element('span', `category-icon ${className}`); hexagon.setAttribute('aria-hidden', 'true'); hexagon.append(img); return hexagon;
+  }
+  const kind = nodeKind(node || {});
+  if (['structure', 'biome', 'dimension'].includes(kind)) {
+    const badge = element('span', `world-icon ${kind}-icon ${className}`); badge.setAttribute('aria-hidden', 'true'); badge.append(img); return badge;
   }
   return img;
 }
@@ -172,7 +176,9 @@ function updateCurve(group) {
     const offset = Math.min(group.offset, distance * .32);
     const cx = (a.x + b.x) / 2 - dy / distance * offset, cy = (a.y + b.y) / 2 + dx / distance * offset;
     const ad = Math.hypot(cx - a.x, cy - a.y) || 1, bd = Math.hypot(cx - b.x, cy - b.y) || 1;
-    group.curve = { ax: a.x + (cx - a.x) / ad * 18, ay: a.y + (cy - a.y) / ad * 18, bx: b.x + (cx - b.x) / bd * 18, by: b.y + (cy - b.y) / bd * 18, cx, cy, loop: false };
+    const ar = nodeBoundaryDistance(state.index.nodes.get(group.source), 18, cx - a.x, cy - a.y);
+    const br = nodeBoundaryDistance(state.index.nodes.get(group.target), 18, cx - b.x, cy - b.y);
+    group.curve = { ax: a.x + (cx - a.x) / ad * ar, ay: a.y + (cy - a.y) / ad * ar, bx: b.x + (cx - b.x) / bd * br, by: b.y + (cy - b.y) / bd * br, cx, cy, loop: false };
   }
   const c = group.curve;
   group.bounds = { left: Math.min(c.ax, c.bx, c.cx, c.dx ?? c.cx), right: Math.max(c.ax, c.bx, c.cx, c.dx ?? c.cx), top: Math.min(c.ay, c.by, c.cy), bottom: Math.max(c.ay, c.by, c.cy) };
@@ -237,7 +243,7 @@ function buildTypeFilters() {
   const nodeContainer = $('node-filters'); nodeContainer.replaceChildren(); state.nodeInputs = [];
   const kinds = new Map();
   for (const node of state.graph.nodes) kinds.set(nodeKind(node), (kinds.get(nodeKind(node)) || 0) + 1);
-  const kindLabels = { item: 'Items', category: 'Categories', mob: 'Mobs', block: 'Blocks', effect: 'Status effects', entity: 'Other entities' };
+  const kindLabels = { item: 'Items', category: 'Categories', mob: 'Mobs', block: 'Blocks', effect: 'Status effects', entity: 'Other entities', structure: 'Structures', biome: 'Biomes', dimension: 'Dimensions' };
   for (const [kind, count] of kinds) {
     const label = element('label', 'filter-label'), checkbox = element('input'); checkbox.type = 'checkbox'; checkbox.value = kind;
     checkbox.setAttribute('aria-label', `Show ${kindLabels[kind] || kind} nodes`);
@@ -428,7 +434,7 @@ function relationshipCard(relation, edges, open = false) {
       pairs.slice(8).forEach(edge => more.append(pairRow(edge))); body.append(more);
     }
     const loot = relation.loot || (relation.sourceLootTable || relation.conditions?.some?.(entry => entry?.value) || relation.modifiers?.some?.(entry => entry?.value) ? relation : null);
-    if (loot) renderLoot(body, loot);
+    if (loot) renderLoot(body, loot, relation.contextRef && state.index.nodes.get(relation.contextRef.nodeId)?.lootContexts?.[relation.contextRef.lootTable]);
     else if (relation.conditions) {
       body.append(element('h4', '', 'CONDITIONS'));
       for (const condition of Array.isArray(relation.conditions) ? relation.conditions : [relation.conditions]) {
@@ -436,9 +442,12 @@ function relationshipCard(relation, edges, open = false) {
       }
     }
     if (relation.layerChance !== undefined) body.append(element('p', 'recipe-note', `${Math.round(relation.layerChance * 100)}% chance of a successful compost layer after the first addition · ${relation.layersRequired || 7} successful layers per Bone Meal.`));
-    const ignored = new Set(['id', 'name', 'type', 'category', 'minVersion', 'maxVersion', 'note', 'raw', 'source', 'sourceClass', 'gameClass', 'code', 'ingredients', 'results', 'inputs', 'outputs', 'loot', 'item', 'sourceLootTable', 'resolvedLootTable', 'entryPath', 'conditions', 'modifiers', 'selection', 'rawEntry', 'conditional', 'unmodifiedItem', 'layerChance', 'layersRequired', 'layerProviderId', 'layerProvider', 'tag']);
+    const ignored = new Set(['id', 'name', 'type', 'category', 'minVersion', 'maxVersion', 'note', 'raw', 'source', 'sourceClass', 'gameClass', 'code', 'ingredients', 'results', 'inputs', 'outputs', 'loot', 'item', 'sourceLootTable', 'resolvedLootTable', 'entryPath', 'conditions', 'modifiers', 'selection', 'rawEntry', 'conditional', 'unmodifiedItem', 'layerChance', 'layersRequired', 'layerProviderId', 'layerProvider', 'tag', 'contextRef']);
     for (const [key, value] of Object.entries(relation)) {
       if (ignored.has(key) || value === null || value === undefined) continue;
+      if (key === 'generationSources') {
+        const sources = element('details', 'ingredient-alternatives'); sources.append(element('summary', 'alternative-label', 'Game generation sources'), element('pre', 'loot-json', JSON.stringify(value, null, 2))); body.append(sources); continue;
+      }
       const row = element('div', 'metadata-row'); row.append(element('b', '', `${key.replaceAll('_', ' ').replace(/([a-z])([A-Z])/g, '$1 $2')}: `), document.createTextNode(typeof value === 'object' ? JSON.stringify(value) : String(value))); body.append(row);
     }
     body.append(element('p', 'recipe-footer', `Coverage from ${relation.minVersion || state.version}${relation.maxVersion ? ` through ${relation.maxVersion}` : ''}`)); card.append(body);
@@ -447,7 +456,7 @@ function relationshipCard(relation, edges, open = false) {
   return card;
 }
 
-function renderLoot(body, loot) {
+function renderLoot(body, loot, generationSources) {
   const readable = value => String(value || '').replaceAll('minecraft:', '').replaceAll('_', ' ');
   const amount = value => typeof value === 'number' ? String(value) : value?.min !== undefined && value?.max !== undefined ? `${value.min}–${value.max}` : value?.n !== undefined ? `binomial (${value.n}, ${value.p})` : 'game-dependent';
   if (loot.conditions?.length) {
@@ -480,7 +489,7 @@ function renderLoot(body, loot) {
   const choices = (loot.selection || []).filter(value => value.type !== 'pool');
   if (choices.length) body.append(element('p', 'recipe-footer', `Relative selection weights: ${choices.map(value => `${value.weight ?? 1}${value.quality ? ` (quality ${value.quality})` : ''}`).join(' → ')}. Conditions and luck can affect selection.`));
   const raw = element('details', 'ingredient-alternatives'); raw.append(element('summary', 'alternative-label', 'Game loot conditions & data'));
-  const pre = element('pre', 'loot-json', JSON.stringify({ sourceLootTable: loot.sourceLootTable, resolvedLootTable: loot.resolvedLootTable, conditions: loot.conditions, modifiers: loot.modifiers, selection: loot.selection, rawEntry: loot.rawEntry }, null, 2));
+  const pre = element('pre', 'loot-json', JSON.stringify({ sourceLootTable: loot.sourceLootTable, resolvedLootTable: loot.resolvedLootTable, conditions: loot.conditions, modifiers: loot.modifiers, selection: loot.selection, rawEntry: loot.rawEntry, generationSources }, null, 2));
   raw.append(pre); body.append(raw);
 }
 
@@ -621,7 +630,8 @@ function nodePath(node, position, radius) {
       if (side) ctx.lineTo(x, y); else ctx.moveTo(x, y);
     }
     ctx.closePath();
-  } else ctx.arc(position.x, position.y, radius, 0, Math.PI * 2);
+  } else if (nodeKind(node) === 'structure') ctx.roundRect(position.x - radius, position.y - radius, radius * 2, radius * 2, radius * STRUCTURE_CORNER_RATIO);
+  else ctx.arc(position.x, position.y, radius, 0, Math.PI * 2);
 }
 
 function focusGeometry(id) {
@@ -633,13 +643,14 @@ function focusGeometry(id) {
 function drawEdge(group, highlighted = false) {
   if (!group.curve) return;
   const c = { ...group.curve };
-  // Focus icons keep a minimum screen size, so visible curve ends follow their circles.
+  // Focus icons keep a minimum screen size, so curve ends follow their node shapes.
   for (const [id, end, controlX, controlY] of [[group.source, 'a', c.cx, c.cy], [group.target, 'b', c.loop ? c.dx : c.cx, c.loop ? c.dy : c.cy]]) {
     const geometry = focusGeometry(id);
     if (!geometry.focused) continue;
     const p = state.positions.get(id), dx = controlX - p.x, dy = controlY - p.y, distance = Math.hypot(dx, dy) || 1;
-    c[`${end}x`] = p.x + dx / distance * geometry.radius;
-    c[`${end}y`] = p.y + dy / distance * geometry.radius;
+    const radius = nodeBoundaryDistance(state.index.nodes.get(id), geometry.radius, dx, dy);
+    c[`${end}x`] = p.x + dx / distance * radius;
+    c[`${end}y`] = p.y + dy / distance * radius;
   }
   const selected = state.selectedEdge === group.key || state.hover?.edge === group;
   ctx.globalAlpha = selected ? 1 : highlighted ? .85 : state.mode === 'nearby' && state.selected ? .12 : state.selected ? .05 : .16;
@@ -755,7 +766,7 @@ function hitNode(point) {
     const p = state.positions.get(node.id); if (!p) continue;
     const geometry = focusGeometry(node.id), radius = geometry.focused ? geometry.radius + 2 / state.camera.zoom : Math.max(20, (mobile.matches ? 22 : 9) / state.camera.zoom);
     const d = Math.hypot(p.x - world.x, p.y - world.y);
-    if (d < radius && d < distance) { closest = node; distance = d; }
+    if (d < distance && nodeContainsPoint(node, radius, p.x - world.x, p.y - world.y)) { closest = node; distance = d; }
   }
   return closest;
 }

@@ -63,3 +63,38 @@ test('the shipped dataset keeps every item, recipe and edge and has complete art
   assert.equal(noRelationships.nodes.length, graph.nodes.length);
   assert.equal(noRelationships.edges.length, 0);
 });
+
+test('world generation keeps structure contents and dimension membership on separate hops', () => {
+  const graph = validateGraph(JSON.parse(readFileSync(new URL('../data/graph.json', import.meta.url))));
+  const nodes = new Map(graph.nodes.map(node => [node.id, node]));
+  const connected = (source, target, type) => graph.edges.some(edge => edge.source === source && edge.target === target && edge.type === type);
+  assert.equal(graph.coverage.structures.registeredStructures, 52);
+  assert.equal(graph.counts.structures, graph.coverage.structures.registeredStructures + graph.coverage.structures.featureStructures + graph.coverage.structures.runtimeSites.length);
+  assert.ok(graph.counts.biomes >= 67);
+  assert.equal(graph.counts.dimensions, 3);
+  for (const relation of graph.relationships.filter(record => record.contextRef)) {
+    const { nodeId, lootTable } = relation.contextRef;
+    assert.ok(nodes.get(nodeId)?.lootContexts?.[lootTable]?.length, relation.id);
+    assert.equal(lootTable, relation.sourceLootTable);
+  }
+  for (const edge of graph.edges) {
+    assert.ok(!(nodes.get(edge.source).kind === 'structure' && nodes.get(edge.target).kind === 'dimension'), edge.id);
+    if (edge.type === 'biome_dimension') {
+      assert.equal(nodes.get(edge.source).kind, 'biome');
+      assert.equal(nodes.get(edge.target).kind, 'dimension');
+    }
+  }
+  assert.ok(connected('structure:minecraft:fortress', 'biome:minecraft:nether_wastes', 'structure_biome'));
+  assert.ok(connected('biome:minecraft:nether_wastes', 'dimension:minecraft:the_nether', 'biome_dimension'));
+  assert.ok(connected('structure:minecraft:end_city', 'minecraft:purpur_block', 'structure_block'));
+  assert.ok(!graph.edges.some(edge => edge.type === 'biome_block' && edge.target === 'minecraft:purpur_block'));
+  assert.ok(connected('structure:minecraft:desert_pyramid', 'minecraft:cut_sandstone', 'structure_block'));
+  assert.ok(!connected('biome:minecraft:desert', 'minecraft:cut_sandstone', 'biome_block'));
+  assert.ok(connected('structure:minecraft:fortress', 'mob:minecraft:blaze', 'structure_spawner_mob'));
+  assert.ok(connected('structure:minecraft:fortress', 'mob:minecraft:blaze', 'structure_spawn_mob'));
+  assert.ok(connected('structure:minecraft:swamp_hut', 'mob:minecraft:witch', 'structure_generated_mob'));
+  assert.ok(connected('structure:minecraft:buried_treasure', 'minecraft:heart_of_the_sea', 'structure_loot'));
+  assert.ok(connected('structure:minecraft:ancient_city', 'minecraft:sculk_shrieker', 'structure_block'));
+  assert.ok(connected('minecraft:sculk_shrieker', 'mob:minecraft:warden', 'mob_summoning'));
+  assert.ok(!connected('structure:minecraft:ancient_city', 'mob:minecraft:warden', 'structure_generated_mob'));
+});

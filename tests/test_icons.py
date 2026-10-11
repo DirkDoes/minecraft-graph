@@ -21,7 +21,7 @@ class IconTests(unittest.TestCase):
         report = json.loads((ROOT / "assets/blocks/coverage.json").read_text(encoding="utf-8"))
         graph = json.loads((ROOT / "data/graph.json").read_text(encoding="utf-8"))
         self.assertEqual(set(report["blocks"]), {n["blockId"] for n in graph["nodes"] if n["kind"] == "block"})
-        for slug in ("fire", "soul_fire", "nether_portal", "frosted_ice"):
+        for slug in ("fire", "soul_fire", "nether_portal", "frosted_ice", "end_portal", "end_gateway", "piston_head"):
             node = next(n for n in graph["nodes"] if n["id"] == "block:minecraft:" + slug)
             self.assertEqual(node["icon"], f"assets/blocks/{slug}.png")
             image = Image.open(ROOT / node["icon"])
@@ -30,6 +30,7 @@ class IconTests(unittest.TestCase):
         textures = set(report["sourceTextures"])
         for texture in ("fire_0", "soul_fire_0", "nether_portal", "frosted_ice_0"):
             self.assertIn(f"assets/minecraft/textures/block/{texture}.png", textures)
+        self.assertIn("assets/minecraft/textures/entity/end_portal/end_portal.png", textures)
 
     def test_mob_camera_faces_front(self):
         camera = rotation([8, 152, 0]) @ np.diag([1, -1, 1])

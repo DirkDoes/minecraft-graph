@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { compareVersions, availableAt, validateGraph, filterGraph, groupEdges, indexGraph, layoutGraph, viewLayers, pickEdge, relationshipPath, nodeKind, filterKey } from '../core.mjs';
+import { compareVersions, availableAt, validateGraph, filterGraph, groupEdges, indexGraph, layoutGraph, viewLayers, pickEdge, relationshipPath, nodeKind, nodeBoundaryDistance, nodeContainsPoint, STRUCTURE_CORNER_RATIO, filterKey } from '../core.mjs';
 
 assert.equal(compareVersions('1.21.10', '1.21.9'), 1);
 assert.equal(compareVersions('26.3', '1.21.11'), 1);
@@ -131,3 +131,44 @@ assert.ok(hubNodes.slice(10).every(node => {
 assert.deepEqual(layered, layoutGraph(hubNodes, hubEdges, { mode: 'nearby', selected: 'focus' }));
 assert.deepEqual(layoutGraph(filtered.nodes, filtered.edges, { mode: 'direct', selected: 'diamond' }), layout);
 console.log('Mixed graph checks passed: kind filters, relationship records, hierarchy, two-hop layers, and ambiguous curve picking.');
+
+const world = {
+  schemaVersion: 1, version: '26.3', recipes: [],
+  nodes: ['structure', 'biome', 'dimension'].map(kind => ({ ...node(`${kind}:minecraft:example`), kind })),
+  relationships: ['structure_biome', 'biome_dimension'].map(type => ({ id: type, type, category: 'worldgen', minVersion: '26.3' })),
+  edges: [
+    { id: 'structure-biome', source: 'structure:minecraft:example', target: 'biome:minecraft:example', type: 'structure_biome', category: 'worldgen', relationId: 'structure_biome' },
+    { id: 'biome-dimension', source: 'biome:minecraft:example', target: 'dimension:minecraft:example', type: 'biome_dimension', category: 'worldgen', relationId: 'biome_dimension' },
+  ],
+};
+validateGraph(world);
+const worldTypes = new Set(world.edges.map(filterKey));
+assert.equal(filterGraph(world, '26.3', worldTypes).edges.length, 2);
+const noStructures = filterGraph(world, '26.3', worldTypes, null, new Set(['biome', 'dimension']));
+assert.equal(noStructures.nodes.length, 2);
+assert.deepEqual(noStructures.edges.map(edge => edge.id), ['biome-dimension']);
+assert.equal(filterGraph(world, '26.3', new Set(['worldgen:structure_biome'])).edges.length, 1);
+assert.deepEqual(relationshipPath('structure_generated_mob', 'worldgen'), ['World generation', 'Structures', 'Generated residents']);
+assert.deepEqual(relationshipPath('structure_spawner_mob', 'worldgen'), ['World generation', 'Structures', 'Spawner mobs']);
+assert.deepEqual(relationshipPath('structure_spawn_mob', 'worldgen'), ['World generation', 'Structures', 'Natural spawning overrides']);
+assert.deepEqual(relationshipPath('biome_block', 'worldgen'), ['World generation', 'Biomes', 'Natural blocks']);
+assert.deepEqual(relationshipPath('structure_loot', 'loot'), ['Loot', 'Structure loot']);
+assert.equal(viewLayers(world, world.nodes[0].id, 'direct').nodes.some(node => node.kind === 'dimension'), false);
+assert.equal(viewLayers(world, world.nodes[0].id, 'nearby').depth.get(world.nodes[2].id), 2);
+
+const structureNode = world.nodes[0], circleNode = world.nodes[1], radius = 18;
+assert.equal(nodeContainsPoint(structureNode, radius, 17, 10), true);
+assert.equal(nodeContainsPoint(circleNode, radius, 17, 10), false);
+assert.equal(nodeContainsPoint(structureNode, radius, 18, 18), false);
+assert.equal(nodeContainsPoint(structureNode, radius, 19, 0), false);
+assert.equal(nodeBoundaryDistance(structureNode, radius, 1, 0), radius);
+assert.equal(nodeBoundaryDistance(circleNode, radius, 1, 1), radius);
+const diagonal = nodeBoundaryDistance(structureNode, radius, 1, 1);
+assert.ok(Math.abs(diagonal - (radius * (1 - STRUCTURE_CORNER_RATIO) * Math.SQRT2 + radius * STRUCTURE_CORNER_RATIO)) < 1e-10);
+// Curve endpoints and the hit area agree at straight edges and rounded corners.
+for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 24) {
+  const x = Math.cos(angle), y = Math.sin(angle), boundary = nodeBoundaryDistance(structureNode, radius, x, y);
+  assert.equal(nodeContainsPoint(structureNode, radius, x * (boundary - .001), y * (boundary - .001)), true);
+  assert.equal(nodeContainsPoint(structureNode, radius, x * (boundary + .001), y * (boundary + .001)), false);
+}
+console.log('World generation checks passed: new node filters, two-hop dimensions, spawn semantics, rounded-square clipping and hit areas.');

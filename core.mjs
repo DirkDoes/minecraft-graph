@@ -22,6 +22,25 @@ export function availableAt(entity, version) {
 }
 
 export const nodeKind = node => node.kind || 'item';
+export const STRUCTURE_CORNER_RATIO = .28;
+
+export function nodeBoundaryDistance(node, radius, dx, dy) {
+  if (nodeKind(node) !== 'structure' || (!dx && !dy)) return radius;
+  const length = Math.hypot(dx, dy), x = Math.abs(dx) / length, y = Math.abs(dy) / length;
+  const side = radius / Math.max(x, y), corner = radius * STRUCTURE_CORNER_RATIO, center = radius - corner;
+  if (Math.min(x, y) * side <= center) return side;
+  const projection = center * (x + y);
+  return projection + Math.sqrt(Math.max(0, projection ** 2 - 2 * center ** 2 + corner ** 2));
+}
+
+export function nodeContainsPoint(node, radius, dx, dy) {
+  if (nodeKind(node) !== 'structure') return Math.hypot(dx, dy) <= radius;
+  const x = Math.abs(dx), y = Math.abs(dy);
+  if (x > radius || y > radius) return false;
+  const corner = radius * STRUCTURE_CORNER_RATIO, center = radius - corner;
+  return Math.max(0, x - center) ** 2 + Math.max(0, y - center) ** 2 <= corner ** 2;
+}
+
 export const edgeCategory = edge => edge.category || (edge.recipeId ? 'recipe' : 'relationship');
 export const relationKey = edge => edge.recipeId || edge.relationId;
 export const filterKey = edge => `${edgeCategory(edge)}:${edge.type}`;
@@ -108,6 +127,8 @@ export function indexGraph(graph) {
 }
 
 const labels = {
+  structure_biome: 'Generates in biome', biome_dimension: 'Part of dimension', structure_block: 'Generated blocks', structure_item: 'Fixed contents', biome_block: 'Natural blocks',
+  structure_generated_mob: 'Generated residents', structure_spawner_mob: 'Spawner mobs', structure_spawn_mob: 'Natural spawning overrides', biome_spawn: 'Natural mob spawning', structure_loot: 'Structure loot',
   coral_dying: 'Coral dying', mining_experience: 'Mining', mob_experience: 'Mob kills', smelting_experience: 'Cooking', breeding_experience: 'Breeding', fishing_experience: 'Fishing', bottle_experience: "Bottles o’ Enchanting", disenchanting_experience: 'Disenchanting',
   crafting_shaped: 'Shaped', crafting_shapeless: 'Shapeless', crafting_decorated_pot: 'Decorated pots',
   crafting_dye: 'Dyeing', crafting_imbue: 'Imbuing', crafting_transmute: 'Transmuting',
@@ -133,7 +154,8 @@ export function recipeType(type) {
 }
 export function relationshipPath(type, category = 'recipe') {
   if (category === 'effects' && type === 'effect_spawn') return ['Spawning', 'Status effects'];
-  const family = ({ recipe: 'Recipes', membership: 'Membership', gathering: 'Gathering', loot: 'Loot', uses: 'Uses', spawning: 'Spawning', effects: 'Status effects', interactions: 'Interactions' })[category] || category.replaceAll('_', ' ').replace(/^./, letter => letter.toUpperCase());
+  const family = ({ recipe: 'Recipes', membership: 'Membership', gathering: 'Gathering', loot: 'Loot', uses: 'Uses', spawning: 'Spawning', effects: 'Status effects', interactions: 'Interactions', worldgen: 'World generation' })[category] || category.replaceAll('_', ' ').replace(/^./, letter => letter.toUpperCase());
+  if (category === 'worldgen') return [family, type.startsWith('structure_') ? 'Structures' : 'Biomes', recipeType(type).label];
   if (category === 'effects') {
     const section = ['food_effect', 'potion_effect', 'arrow_effect', 'beacon_effect', 'mob_attack_effect', 'mob_aura_effect', 'block_contact_effect', 'ominous_effect'].includes(type) ? 'Sources'
       : ['effect_spawn', 'effect_world_change'].includes(type) ? 'Consequences' : 'Interactions';
