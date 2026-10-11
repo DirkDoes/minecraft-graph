@@ -1,0 +1,910 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "icons": {
+    "minecraft:allay": {
+      "method": "official_mob_model",
+      "layer": "ALLAY",
+      "texture": "assets/minecraft/textures/entity/allay/allay.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:armadillo": {
+      "method": "official_mob_model",
+      "layer": "ARMADILLO",
+      "texture": "assets/minecraft/textures/entity/armadillo/armadillo.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:axolotl": {
+      "method": "official_mob_model",
+      "layer": "AXOLOTL",
+      "texture": "assets/minecraft/textures/entity/axolotl/axolotl_lucy.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:bat": {
+      "method": "official_mob_model",
+      "layer": "BAT",
+      "texture": "assets/minecraft/textures/entity/bat/bat.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:bee": {
+      "method": "official_mob_model",
+      "layer": "BEE",
+      "texture": "assets/minecraft/textures/entity/bee/bee.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:blaze": {
+      "method": "official_mob_model",
+      "layer": "BLAZE",
+      "texture": "assets/minecraft/textures/entity/blaze/blaze.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:bogged": {
+      "method": "official_mob_model",
+      "layer": "BOGGED",
+      "texture": "assets/minecraft/textures/entity/skeleton/bogged.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:breeze": {
+      "method": "official_mob_model",
+      "layer": "BREEZE",
+      "texture": "assets/minecraft/textures/entity/breeze/breeze.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:camel": {
+      "method": "official_mob_model",
+      "layer": "CAMEL",
+      "texture": "assets/minecraft/textures/entity/camel/camel.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:camel_husk": {
+      "method": "official_mob_model",
+      "layer": "CAMEL",
+      "texture": "assets/minecraft/textures/entity/camel/camel_husk.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:cat": {
+      "method": "official_mob_model",
+      "layer": "CAT",
+      "texture": "assets/minecraft/textures/entity/cat/cat_tabby.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:cave_spider": {
+      "method": "official_mob_model",
+      "layer": "CAVE_SPIDER",
+      "texture": "assets/minecraft/textures/entity/spider/cave_spider.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:chicken": {
+      "method": "official_mob_model",
+      "layer": "CHICKEN",
+      "texture": "assets/minecraft/textures/entity/chicken/chicken_temperate.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:cod": {
+      "method": "official_mob_model",
+      "layer": "COD",
+      "texture": "assets/minecraft/textures/entity/fish/cod.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:copper_golem": {
+      "method": "official_mob_model",
+      "layer": "COPPER_GOLEM",
+      "texture": "assets/minecraft/textures/entity/copper_golem/copper_golem.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:cow": {
+      "method": "official_mob_model",
+      "layer": "COW",
+      "texture": "assets/minecraft/textures/entity/cow/cow_temperate.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:creaking": {
+      "method": "official_mob_model",
+      "layer": "CREAKING",
+      "texture": "assets/minecraft/textures/entity/creaking/creaking.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:creeper": {
+      "method": "official_mob_model",
+      "layer": "CREEPER",
+      "texture": "assets/minecraft/textures/entity/creeper/creeper.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:dolphin": {
+      "method": "official_mob_model",
+      "layer": "DOLPHIN",
+      "texture": "assets/minecraft/textures/entity/dolphin/dolphin.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:donkey": {
+      "method": "official_mob_model",
+      "layer": "DONKEY",
+      "texture": "assets/minecraft/textures/entity/horse/donkey.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:drowned": {
+      "method": "official_mob_model",
+      "layer": "DROWNED",
+      "texture": "assets/minecraft/textures/entity/zombie/drowned.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:elder_guardian": {
+      "method": "official_mob_model",
+      "layer": "ELDER_GUARDIAN",
+      "texture": "assets/minecraft/textures/entity/guardian/guardian_elder.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:ender_dragon": {
+      "method": "official_mob_model",
+      "layer": "ENDER_DRAGON",
+      "texture": "assets/minecraft/textures/entity/enderdragon/dragon.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:enderman": {
+      "method": "official_mob_model",
+      "layer": "ENDERMAN",
+      "texture": "assets/minecraft/textures/entity/enderman/enderman.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:endermite": {
+      "method": "official_mob_model",
+      "layer": "ENDERMITE",
+      "texture": "assets/minecraft/textures/entity/endermite/endermite.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:evoker": {
+      "method": "official_mob_model",
+      "layer": "EVOKER",
+      "texture": "assets/minecraft/textures/entity/illager/evoker.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:fox": {
+      "method": "official_mob_model",
+      "layer": "FOX",
+      "texture": "assets/minecraft/textures/entity/fox/fox.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:frog": {
+      "method": "official_mob_model",
+      "layer": "FROG",
+      "texture": "assets/minecraft/textures/entity/frog/frog_temperate.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:ghast": {
+      "method": "official_mob_model",
+      "layer": "GHAST",
+      "texture": "assets/minecraft/textures/entity/ghast/ghast.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:giant": {
+      "method": "official_mob_model",
+      "layer": "GIANT",
+      "texture": "assets/minecraft/textures/entity/zombie/zombie.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:glow_squid": {
+      "method": "official_mob_model",
+      "layer": "GLOW_SQUID",
+      "texture": "assets/minecraft/textures/entity/squid/glow_squid.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:goat": {
+      "method": "official_mob_model",
+      "layer": "GOAT",
+      "texture": "assets/minecraft/textures/entity/goat/goat.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:guardian": {
+      "method": "official_mob_model",
+      "layer": "GUARDIAN",
+      "texture": "assets/minecraft/textures/entity/guardian/guardian.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:happy_ghast": {
+      "method": "official_mob_model",
+      "layer": "HAPPY_GHAST",
+      "texture": "assets/minecraft/textures/entity/ghast/happy_ghast.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:hoglin": {
+      "method": "official_mob_model",
+      "layer": "HOGLIN",
+      "texture": "assets/minecraft/textures/entity/hoglin/hoglin.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:horse": {
+      "method": "official_mob_model",
+      "layer": "HORSE",
+      "texture": "assets/minecraft/textures/entity/horse/horse_brown.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:husk": {
+      "method": "official_mob_model",
+      "layer": "HUSK",
+      "texture": "assets/minecraft/textures/entity/zombie/husk.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:illusioner": {
+      "method": "official_mob_model",
+      "layer": "ILLUSIONER",
+      "texture": "assets/minecraft/textures/entity/illager/illusioner.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:iron_golem": {
+      "method": "official_mob_model",
+      "layer": "IRON_GOLEM",
+      "texture": "assets/minecraft/textures/entity/iron_golem/iron_golem.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:llama": {
+      "method": "official_mob_model",
+      "layer": "LLAMA",
+      "texture": "assets/minecraft/textures/entity/llama/llama_creamy.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:magma_cube": {
+      "method": "official_mob_model",
+      "layer": "MAGMA_CUBE",
+      "texture": "assets/minecraft/textures/entity/slime/magmacube.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:mooshroom": {
+      "method": "official_mob_model",
+      "layer": "MOOSHROOM",
+      "texture": "assets/minecraft/textures/entity/cow/mooshroom_red.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:mule": {
+      "method": "official_mob_model",
+      "layer": "MULE",
+      "texture": "assets/minecraft/textures/entity/horse/mule.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:nautilus": {
+      "method": "official_mob_model",
+      "layer": "NAUTILUS",
+      "texture": "assets/minecraft/textures/entity/nautilus/nautilus.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:ocelot": {
+      "method": "official_mob_model",
+      "layer": "OCELOT",
+      "texture": "assets/minecraft/textures/entity/cat/ocelot.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:panda": {
+      "method": "official_mob_model",
+      "layer": "PANDA",
+      "texture": "assets/minecraft/textures/entity/panda/panda.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:parched": {
+      "method": "official_mob_model",
+      "layer": "PARCHED",
+      "texture": "assets/minecraft/textures/entity/skeleton/parched.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:parrot": {
+      "method": "official_mob_model",
+      "layer": "PARROT",
+      "texture": "assets/minecraft/textures/entity/parrot/parrot_red_blue.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:phantom": {
+      "method": "official_mob_model",
+      "layer": "PHANTOM",
+      "texture": "assets/minecraft/textures/entity/phantom/phantom.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:pig": {
+      "method": "official_mob_model",
+      "layer": "PIG",
+      "texture": "assets/minecraft/textures/entity/pig/pig_temperate.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:piglin": {
+      "method": "official_mob_model",
+      "layer": "PIGLIN",
+      "texture": "assets/minecraft/textures/entity/piglin/piglin.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:piglin_brute": {
+      "method": "official_mob_model",
+      "layer": "PIGLIN_BRUTE",
+      "texture": "assets/minecraft/textures/entity/piglin/piglin_brute.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:pillager": {
+      "method": "official_mob_model",
+      "layer": "PILLAGER",
+      "texture": "assets/minecraft/textures/entity/illager/pillager.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:polar_bear": {
+      "method": "official_mob_model",
+      "layer": "POLAR_BEAR",
+      "texture": "assets/minecraft/textures/entity/bear/polarbear.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:pufferfish": {
+      "method": "official_mob_model",
+      "layer": "PUFFERFISH_SMALL",
+      "texture": "assets/minecraft/textures/entity/fish/pufferfish.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:rabbit": {
+      "method": "official_mob_model",
+      "layer": "RABBIT",
+      "texture": "assets/minecraft/textures/entity/rabbit/rabbit_brown.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:ravager": {
+      "method": "official_mob_model",
+      "layer": "RAVAGER",
+      "texture": "assets/minecraft/textures/entity/illager/ravager.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:salmon": {
+      "method": "official_mob_model",
+      "layer": "SALMON",
+      "texture": "assets/minecraft/textures/entity/fish/salmon.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:sheep": {
+      "method": "official_mob_model",
+      "layer": "SHEEP",
+      "texture": "assets/minecraft/textures/entity/sheep/sheep.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:shulker": {
+      "method": "official_mob_model",
+      "layer": "SHULKER",
+      "texture": "assets/minecraft/textures/entity/shulker/shulker.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:silverfish": {
+      "method": "official_mob_model",
+      "layer": "SILVERFISH",
+      "texture": "assets/minecraft/textures/entity/silverfish/silverfish.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:skeleton": {
+      "method": "official_mob_model",
+      "layer": "SKELETON",
+      "texture": "assets/minecraft/textures/entity/skeleton/skeleton.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:skeleton_horse": {
+      "method": "official_mob_model",
+      "layer": "SKELETON_HORSE",
+      "texture": "assets/minecraft/textures/entity/horse/horse_skeleton.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:slime": {
+      "method": "official_mob_model",
+      "layer": "SLIME",
+      "texture": "assets/minecraft/textures/entity/slime/slime.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:sniffer": {
+      "method": "official_mob_model",
+      "layer": "SNIFFER",
+      "texture": "assets/minecraft/textures/entity/sniffer/sniffer.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:snow_golem": {
+      "method": "official_mob_model",
+      "layer": "SNOW_GOLEM",
+      "texture": "assets/minecraft/textures/entity/snow_golem/snow_golem.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:spider": {
+      "method": "official_mob_model",
+      "layer": "SPIDER",
+      "texture": "assets/minecraft/textures/entity/spider/spider.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:squid": {
+      "method": "official_mob_model",
+      "layer": "SQUID",
+      "texture": "assets/minecraft/textures/entity/squid/squid.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:stray": {
+      "method": "official_mob_model",
+      "layer": "STRAY",
+      "texture": "assets/minecraft/textures/entity/skeleton/stray.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:strider": {
+      "method": "official_mob_model",
+      "layer": "STRIDER",
+      "texture": "assets/minecraft/textures/entity/strider/strider.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:sulfur_cube": {
+      "method": "official_mob_model",
+      "layer": "SULFUR_CUBE",
+      "texture": "assets/minecraft/textures/entity/sulfur_cube/sulfur_cube_outer.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:tadpole": {
+      "method": "official_mob_model",
+      "layer": "TADPOLE",
+      "texture": "assets/minecraft/textures/entity/tadpole/tadpole.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:trader_llama": {
+      "method": "official_mob_model",
+      "layer": "TRADER_LLAMA",
+      "texture": "assets/minecraft/textures/entity/llama/llama_creamy.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:tropical_fish": {
+      "method": "official_mob_model",
+      "layer": "TROPICAL_FISH_SMALL",
+      "texture": "assets/minecraft/textures/entity/fish/tropical_a.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:turtle": {
+      "method": "official_mob_model",
+      "layer": "TURTLE",
+      "texture": "assets/minecraft/textures/entity/turtle/turtle.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:vex": {
+      "method": "official_mob_model",
+      "layer": "VEX",
+      "texture": "assets/minecraft/textures/entity/illager/vex.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:villager": {
+      "method": "official_mob_model",
+      "layer": "VILLAGER",
+      "texture": "assets/minecraft/textures/entity/villager/villager.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:vindicator": {
+      "method": "official_mob_model",
+      "layer": "VINDICATOR",
+      "texture": "assets/minecraft/textures/entity/illager/vindicator.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:wandering_trader": {
+      "method": "official_mob_model",
+      "layer": "WANDERING_TRADER",
+      "texture": "assets/minecraft/textures/entity/wandering_trader/wandering_trader.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:warden": {
+      "method": "official_mob_model",
+      "layer": "WARDEN",
+      "texture": "assets/minecraft/textures/entity/warden/warden.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:witch": {
+      "method": "official_mob_model",
+      "layer": "WITCH",
+      "texture": "assets/minecraft/textures/entity/witch/witch.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:wither": {
+      "method": "official_mob_model",
+      "layer": "WITHER",
+      "texture": "assets/minecraft/textures/entity/wither/wither.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:wither_skeleton": {
+      "method": "official_mob_model",
+      "layer": "WITHER_SKELETON",
+      "texture": "assets/minecraft/textures/entity/skeleton/wither_skeleton.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:wolf": {
+      "method": "official_mob_model",
+      "layer": "WOLF",
+      "texture": "assets/minecraft/textures/entity/wolf/wolf.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:zoglin": {
+      "method": "official_mob_model",
+      "layer": "ZOGLIN",
+      "texture": "assets/minecraft/textures/entity/hoglin/zoglin.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:zombie": {
+      "method": "official_mob_model",
+      "layer": "ZOMBIE",
+      "texture": "assets/minecraft/textures/entity/zombie/zombie.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:zombie_horse": {
+      "method": "official_mob_model",
+      "layer": "ZOMBIE_HORSE",
+      "texture": "assets/minecraft/textures/entity/horse/horse_zombie.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:zombie_nautilus": {
+      "method": "official_mob_model",
+      "layer": "ZOMBIE_NAUTILUS",
+      "texture": "assets/minecraft/textures/entity/nautilus/zombie_nautilus.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:zombie_villager": {
+      "method": "official_mob_model",
+      "layer": "ZOMBIE_VILLAGER",
+      "texture": "assets/minecraft/textures/entity/zombie_villager/zombie_villager.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    },
+    "minecraft:zombified_piglin": {
+      "method": "official_mob_model",
+      "layer": "ZOMBIFIED_PIGLIN",
+      "texture": "assets/minecraft/textures/entity/piglin/zombified_piglin.png",
+      "viewRotation": [
+        8,
+        152,
+        0
+      ]
+    }
+  },
+  "count": 90,
+  "limitations": [
+    "Static default baked pose, representative adult skin and simplified lighting; equipment, animation, every variant and some extra render layers are omitted."
+  ]
+}

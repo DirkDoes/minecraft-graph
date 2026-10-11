@@ -1,0 +1,746 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "count": 70,
+  "blocks": {
+    "minecraft:attached_melon_stem": {
+      "state": {
+        "facing": "north"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/attached_melon_stem",
+          "y": 90
+        }
+      ]
+    },
+    "minecraft:attached_pumpkin_stem": {
+      "state": {
+        "facing": "north"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/attached_pumpkin_stem",
+          "y": 90
+        }
+      ]
+    },
+    "minecraft:bamboo_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/bamboo_sapling"
+        }
+      ]
+    },
+    "minecraft:black_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/black_candle_cake"
+        }
+      ]
+    },
+    "minecraft:blue_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/blue_candle_cake"
+        }
+      ]
+    },
+    "minecraft:brown_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/brown_candle_cake"
+        }
+      ]
+    },
+    "minecraft:candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/candle_cake"
+        }
+      ]
+    },
+    "minecraft:cave_vines_plant": {
+      "state": {
+        "berries": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/cave_vines_plant"
+        }
+      ]
+    },
+    "minecraft:cyan_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/cyan_candle_cake"
+        }
+      ]
+    },
+    "minecraft:fire": {
+      "state": {
+        "age": "0",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/fire_floor0"
+        },
+        {
+          "model": "minecraft:block/fire_side0"
+        },
+        {
+          "model": "minecraft:block/fire_side0",
+          "y": 90
+        },
+        {
+          "model": "minecraft:block/fire_side0",
+          "y": 180
+        },
+        {
+          "model": "minecraft:block/fire_side0",
+          "y": 270
+        }
+      ]
+    },
+    "minecraft:frosted_ice": {
+      "state": {
+        "age": "0"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/frosted_ice_0"
+        }
+      ]
+    },
+    "minecraft:gray_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/gray_candle_cake"
+        }
+      ]
+    },
+    "minecraft:green_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/green_candle_cake"
+        }
+      ]
+    },
+    "minecraft:kelp_plant": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/kelp_plant"
+        }
+      ]
+    },
+    "minecraft:light_blue_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/light_blue_candle_cake"
+        }
+      ]
+    },
+    "minecraft:light_gray_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/light_gray_candle_cake"
+        }
+      ]
+    },
+    "minecraft:lime_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/lime_candle_cake"
+        }
+      ]
+    },
+    "minecraft:magenta_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/magenta_candle_cake"
+        }
+      ]
+    },
+    "minecraft:nether_portal": {
+      "state": {
+        "axis": "x"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/nether_portal_ns"
+        }
+      ]
+    },
+    "minecraft:orange_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/orange_candle_cake"
+        }
+      ]
+    },
+    "minecraft:pink_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/pink_candle_cake"
+        }
+      ]
+    },
+    "minecraft:potted_acacia_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_acacia_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_allium": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_allium"
+        }
+      ]
+    },
+    "minecraft:potted_azalea_bush": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_azalea_bush"
+        }
+      ]
+    },
+    "minecraft:potted_azure_bluet": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_azure_bluet"
+        }
+      ]
+    },
+    "minecraft:potted_bamboo": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_bamboo"
+        }
+      ]
+    },
+    "minecraft:potted_birch_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_birch_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_blue_orchid": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_blue_orchid"
+        }
+      ]
+    },
+    "minecraft:potted_brown_mushroom": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_brown_mushroom"
+        }
+      ]
+    },
+    "minecraft:potted_cactus": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_cactus"
+        }
+      ]
+    },
+    "minecraft:potted_cherry_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_cherry_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_closed_eyeblossom": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_closed_eyeblossom"
+        }
+      ]
+    },
+    "minecraft:potted_cornflower": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_cornflower"
+        }
+      ]
+    },
+    "minecraft:potted_crimson_fungus": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_crimson_fungus"
+        }
+      ]
+    },
+    "minecraft:potted_crimson_roots": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_crimson_roots"
+        }
+      ]
+    },
+    "minecraft:potted_dandelion": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_dandelion"
+        }
+      ]
+    },
+    "minecraft:potted_dark_oak_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_dark_oak_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_dead_bush": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_dead_bush"
+        }
+      ]
+    },
+    "minecraft:potted_fern": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_fern"
+        }
+      ]
+    },
+    "minecraft:potted_flowering_azalea_bush": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_flowering_azalea_bush"
+        }
+      ]
+    },
+    "minecraft:potted_golden_dandelion": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_golden_dandelion"
+        }
+      ]
+    },
+    "minecraft:potted_jungle_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_jungle_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_lily_of_the_valley": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_lily_of_the_valley"
+        }
+      ]
+    },
+    "minecraft:potted_mangrove_propagule": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_mangrove_propagule"
+        }
+      ]
+    },
+    "minecraft:potted_oak_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_oak_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_open_eyeblossom": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_open_eyeblossom"
+        }
+      ]
+    },
+    "minecraft:potted_orange_tulip": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_orange_tulip"
+        }
+      ]
+    },
+    "minecraft:potted_oxeye_daisy": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_oxeye_daisy"
+        }
+      ]
+    },
+    "minecraft:potted_pale_oak_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_pale_oak_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_pink_tulip": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_pink_tulip"
+        }
+      ]
+    },
+    "minecraft:potted_poplar_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_poplar_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_poppy": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_poppy"
+        }
+      ]
+    },
+    "minecraft:potted_red_mushroom": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_red_mushroom"
+        }
+      ]
+    },
+    "minecraft:potted_red_tulip": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_red_tulip"
+        }
+      ]
+    },
+    "minecraft:potted_spruce_sapling": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_spruce_sapling"
+        }
+      ]
+    },
+    "minecraft:potted_torchflower": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_torchflower"
+        }
+      ]
+    },
+    "minecraft:potted_warped_fungus": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_warped_fungus"
+        }
+      ]
+    },
+    "minecraft:potted_warped_roots": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_warped_roots"
+        }
+      ]
+    },
+    "minecraft:potted_white_tulip": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_white_tulip"
+        }
+      ]
+    },
+    "minecraft:potted_wither_rose": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/potted_wither_rose"
+        }
+      ]
+    },
+    "minecraft:purple_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/purple_candle_cake"
+        }
+      ]
+    },
+    "minecraft:red_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/red_candle_cake"
+        }
+      ]
+    },
+    "minecraft:soul_fire": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/soul_fire_floor0"
+        },
+        {
+          "model": "minecraft:block/soul_fire_side0"
+        },
+        {
+          "model": "minecraft:block/soul_fire_side0",
+          "y": 90
+        },
+        {
+          "model": "minecraft:block/soul_fire_side0",
+          "y": 180
+        },
+        {
+          "model": "minecraft:block/soul_fire_side0",
+          "y": 270
+        }
+      ]
+    },
+    "minecraft:tall_seagrass": {
+      "state": {
+        "half": "lower"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/tall_seagrass_bottom"
+        }
+      ]
+    },
+    "minecraft:twisting_vines_plant": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/twisting_vines_plant"
+        }
+      ]
+    },
+    "minecraft:weeping_vines_plant": {
+      "state": {},
+      "models": [
+        {
+          "model": "minecraft:block/weeping_vines_plant"
+        }
+      ]
+    },
+    "minecraft:white_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/white_candle_cake"
+        }
+      ]
+    },
+    "minecraft:yellow_candle_cake": {
+      "state": {
+        "lit": "false"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/yellow_candle_cake"
+        }
+      ]
+    },
+    "minecraft:water": {
+      "state": {
+        "level": "0"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/water"
+        }
+      ]
+    },
+    "minecraft:lava": {
+      "state": {
+        "level": "0"
+      },
+      "models": [
+        {
+          "model": "minecraft:block/lava"
+        }
+      ]
+    }
+  },
+  "sourceTextures": [
+    "assets/minecraft/textures/block/acacia_sapling.png",
+    "assets/minecraft/textures/block/allium.png",
+    "assets/minecraft/textures/block/attached_melon_stem.png",
+    "assets/minecraft/textures/block/attached_pumpkin_stem.png",
+    "assets/minecraft/textures/block/azure_bluet.png",
+    "assets/minecraft/textures/block/bamboo_singleleaf.png",
+    "assets/minecraft/textures/block/bamboo_stage0.png",
+    "assets/minecraft/textures/block/bamboo_stalk.png",
+    "assets/minecraft/textures/block/birch_sapling.png",
+    "assets/minecraft/textures/block/black_candle.png",
+    "assets/minecraft/textures/block/blue_candle.png",
+    "assets/minecraft/textures/block/blue_orchid.png",
+    "assets/minecraft/textures/block/brown_candle.png",
+    "assets/minecraft/textures/block/brown_mushroom.png",
+    "assets/minecraft/textures/block/cactus_side.png",
+    "assets/minecraft/textures/block/cactus_top.png",
+    "assets/minecraft/textures/block/cake_bottom.png",
+    "assets/minecraft/textures/block/cake_side.png",
+    "assets/minecraft/textures/block/cake_top.png",
+    "assets/minecraft/textures/block/candle.png",
+    "assets/minecraft/textures/block/cave_vines_plant.png",
+    "assets/minecraft/textures/block/cherry_sapling.png",
+    "assets/minecraft/textures/block/closed_eyeblossom.png",
+    "assets/minecraft/textures/block/cornflower.png",
+    "assets/minecraft/textures/block/crimson_fungus.png",
+    "assets/minecraft/textures/block/crimson_roots_pot.png",
+    "assets/minecraft/textures/block/cyan_candle.png",
+    "assets/minecraft/textures/block/dandelion.png",
+    "assets/minecraft/textures/block/dark_oak_sapling.png",
+    "assets/minecraft/textures/block/dead_bush.png",
+    "assets/minecraft/textures/block/dirt.png",
+    "assets/minecraft/textures/block/fern.png",
+    "assets/minecraft/textures/block/fire_0.png",
+    "assets/minecraft/textures/block/flower_pot.png",
+    "assets/minecraft/textures/block/frosted_ice_0.png",
+    "assets/minecraft/textures/block/golden_dandelion.png",
+    "assets/minecraft/textures/block/gray_candle.png",
+    "assets/minecraft/textures/block/green_candle.png",
+    "assets/minecraft/textures/block/jungle_sapling.png",
+    "assets/minecraft/textures/block/kelp_plant.png",
+    "assets/minecraft/textures/block/lava_still.png",
+    "assets/minecraft/textures/block/light_blue_candle.png",
+    "assets/minecraft/textures/block/light_gray_candle.png",
+    "assets/minecraft/textures/block/lily_of_the_valley.png",
+    "assets/minecraft/textures/block/lime_candle.png",
+    "assets/minecraft/textures/block/magenta_candle.png",
+    "assets/minecraft/textures/block/mangrove_propagule.png",
+    "assets/minecraft/textures/block/melon_stem.png",
+    "assets/minecraft/textures/block/nether_portal.png",
+    "assets/minecraft/textures/block/oak_sapling.png",
+    "assets/minecraft/textures/block/open_eyeblossom.png",
+    "assets/minecraft/textures/block/open_eyeblossom_emissive.png",
+    "assets/minecraft/textures/block/orange_candle.png",
+    "assets/minecraft/textures/block/orange_tulip.png",
+    "assets/minecraft/textures/block/oxeye_daisy.png",
+    "assets/minecraft/textures/block/pale_oak_sapling.png",
+    "assets/minecraft/textures/block/pink_candle.png",
+    "assets/minecraft/textures/block/pink_tulip.png",
+    "assets/minecraft/textures/block/poplar_sapling.png",
+    "assets/minecraft/textures/block/poppy.png",
+    "assets/minecraft/textures/block/potted_azalea_bush_plant.png",
+    "assets/minecraft/textures/block/potted_azalea_bush_side.png",
+    "assets/minecraft/textures/block/potted_azalea_bush_top.png",
+    "assets/minecraft/textures/block/potted_flowering_azalea_bush_plant.png",
+    "assets/minecraft/textures/block/potted_flowering_azalea_bush_side.png",
+    "assets/minecraft/textures/block/potted_flowering_azalea_bush_top.png",
+    "assets/minecraft/textures/block/pumpkin_stem.png",
+    "assets/minecraft/textures/block/purple_candle.png",
+    "assets/minecraft/textures/block/red_candle.png",
+    "assets/minecraft/textures/block/red_mushroom.png",
+    "assets/minecraft/textures/block/red_tulip.png",
+    "assets/minecraft/textures/block/soul_fire_0.png",
+    "assets/minecraft/textures/block/spruce_sapling.png",
+    "assets/minecraft/textures/block/tall_seagrass_bottom.png",
+    "assets/minecraft/textures/block/torchflower.png",
+    "assets/minecraft/textures/block/twisting_vines_plant.png",
+    "assets/minecraft/textures/block/warped_fungus.png",
+    "assets/minecraft/textures/block/warped_roots_pot.png",
+    "assets/minecraft/textures/block/water_still.png",
+    "assets/minecraft/textures/block/weeping_vines_plant.png",
+    "assets/minecraft/textures/block/white_candle.png",
+    "assets/minecraft/textures/block/white_tulip.png",
+    "assets/minecraft/textures/block/wither_rose.png",
+    "assets/minecraft/textures/block/yellow_candle.png"
+  ],
+  "limitations": [
+    "Static default block state and first animation frame; one deterministic model alternative.",
+    "Plant biome tint uses representative green. Fluids use their real still texture on a simplified cube; Water uses the game's Plains water tint."
+  ]
+}
