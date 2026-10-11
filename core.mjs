@@ -108,6 +108,7 @@ export function indexGraph(graph) {
 }
 
 const labels = {
+  coral_dying: 'Coral dying', mining_experience: 'Mining', mob_experience: 'Mob kills', smelting_experience: 'Cooking', breeding_experience: 'Breeding', fishing_experience: 'Fishing', bottle_experience: "Bottles o’ Enchanting", disenchanting_experience: 'Disenchanting',
   crafting_shaped: 'Shaped', crafting_shapeless: 'Shapeless', crafting_decorated_pot: 'Decorated pots',
   crafting_dye: 'Dyeing', crafting_imbue: 'Imbuing', crafting_transmute: 'Transmuting',
   crafting_special_bannerduplicate: 'Banner copying', crafting_special_bookcloning: 'Book copying',

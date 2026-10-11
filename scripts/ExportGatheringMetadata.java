@@ -9,6 +9,9 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.block.SuspiciousEffectHolder;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DropExperienceBlock;
+import net.minecraft.util.valueproviders.IntProvider;
 
 // Use the game's item mapping, including blocks that have no item and map to air.
 public class ExportGatheringMetadata {
@@ -18,10 +21,23 @@ public class ExportGatheringMetadata {
         Bootstrap.bootStrap();
         Map<String, String> blockItems = new TreeMap<>();
         Map<String, List<Object>> stewIngredients = new TreeMap<>();
+        Map<String, String> coralDeaths = new TreeMap<>();
+        Map<String, Object> blockExperience = new TreeMap<>();
+        var xpField = DropExperienceBlock.class.getDeclaredField("xpRange");
+        xpField.setAccessible(true);
         for (var block : BuiltInRegistries.BLOCK) {
             String blockId = BuiltInRegistries.BLOCK.getKey(block).toString();
             String itemId = BuiltInRegistries.ITEM.getKey(block.asItem()).toString();
             blockItems.put(blockId, itemId);
+            if (block instanceof DropExperienceBlock) {
+                var range = (IntProvider) xpField.get(block);
+                if (range.maxInclusive() > 0) blockExperience.put(blockId, Map.of("min", range.minInclusive(), "max", range.maxInclusive()));
+            }
+            if (List.of("CoralBlock", "CoralPlantBlock", "CoralFanBlock", "CoralWallFanBlock").contains(block.getClass().getSimpleName())) {
+                var field = block.getClass().getDeclaredField("deadBlock");
+                field.setAccessible(true);
+                coralDeaths.put(blockId, BuiltInRegistries.BLOCK.getKey((Block) field.get(block)).toString());
+            }
             if (block instanceof SuspiciousEffectHolder holder && !itemId.equals("minecraft:air")) {
                 List<Object> effects = new ArrayList<>();
                 for (var effect : holder.getSuspiciousEffects().effects()) {
@@ -35,7 +51,8 @@ public class ExportGatheringMetadata {
             throw new IllegalStateException("Incomplete gathering metadata export");
         }
         Map<String, Object> result = Map.of("version", SharedConstants.getCurrentVersion().name(),
-                                            "blockItems", blockItems, "suspiciousStewIngredients", stewIngredients);
+                                            "blockItems", blockItems, "suspiciousStewIngredients", stewIngredients,
+                                            "coralDeaths", coralDeaths, "blockExperience", blockExperience);
         Files.writeString(Path.of(args[0]), new Gson().toJson(result));
         System.out.println("Exported " + blockItems.size() + " block mappings and " + stewIngredients.size() + " suspicious stew ingredients");
     }

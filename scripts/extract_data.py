@@ -338,6 +338,7 @@ def build_graph(version, reports):
         from interaction_relations import build_interactions
         from plant_relations import build_plants
         from mob_behavior_relations import build_mob_behaviors
+        from experience_relations import build_experience
         categories = build_categories(game, recipes, version)
         mobs = build_mobs(game, version)
         gathering = build_gathering(game, version, mobs["nodes"])
@@ -346,8 +347,9 @@ def build_graph(version, reports):
         interactions = build_interactions(game, version, existing_nodes)
         plants = build_plants(game, version, existing_nodes)
         mob_behaviors = build_mob_behaviors(game, version, existing_nodes)
+        experience = build_experience(game, recipes, version, existing_nodes, interactions["edges"])
         item_edges = build_edges(recipes, game.items)
-        additions = [categories, mobs, gathering, effects, interactions, plants, mob_behaviors]
+        additions = [categories, mobs, gathering, effects, interactions, plants, mob_behaviors, experience]
         for node in nodes:
             capabilities = {}
             for part in (effects, interactions):
@@ -361,8 +363,8 @@ def build_graph(version, reports):
                  "edges": item_edges + [edge for part in additions for edge in part["edges"]],
                  "coverage": {"categories": categories["coverage"], "mobs": mobs["coverage"], "gathering": gathering["coverage"],
                               "effects": effects["coverage"], "interactions": interactions["coverage"], "plants": plants["coverage"],
-                              "mobBehaviors": mob_behaviors["coverage"]}}
-        artwork_sources = b"".join((ROOT / "scripts" / name).read_bytes() for name in ("render_icons.py", "render_blocks.py", "render_mobs.py", "effect_relations.py", "ExportItemGeometry.java", "ExportMobGeometry.java"))
+                              "mobBehaviors": mob_behaviors["coverage"], "experience": experience["coverage"]}}
+        artwork_sources = b"".join((ROOT / "scripts" / name).read_bytes() for name in ("render_icons.py", "render_blocks.py", "render_mobs.py", "effect_relations.py", "experience_relations.py", "ExportItemGeometry.java", "ExportMobGeometry.java"))
         graph["assetRevision"] = hashlib.sha1(artwork_sources + version.encode()).hexdigest()[:12]
         node_ids = {node["id"] for node in graph["nodes"]}
         record_ids = {record["id"] for record in graph["recipes"] + graph["relationships"]}
@@ -374,7 +376,7 @@ def build_graph(version, reports):
                 raise ValueError(f"Invalid graph edge: {edge['id']}")
             edge_ids.add(edge["id"])
         graph["counts"] = {"items": len(nodes), "nodes": len(graph["nodes"]), "categories": len(categories["nodes"]), "mobs": len(mobs["nodes"]),
-                           "blocks": len(gathering["nodes"]), "effects": len(effects["nodes"]), "vanillaRecipeFiles": len(paths), "supplementalRecipes": len(recipes) - len(paths),
+                           "blocks": len(gathering["nodes"]), "effects": len(effects["nodes"]), "entities": len(experience["nodes"]), "vanillaRecipeFiles": len(paths), "supplementalRecipes": len(recipes) - len(paths),
                            "recipes": len(recipes), "relationships": len(graph["relationships"]), "itemRecipeEdges": len(item_edges), "edges": len(graph["edges"])}
         return graph
 

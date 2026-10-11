@@ -18,7 +18,9 @@ Open **http://127.0.0.1:3000**. `npm start` does the same thing. No package inst
 
 Search any node: results identify items, categories, mobs, blocks and status effects. Categories have hexagonal badges and graph nodes; other nodes are circular. Selecting a search result opens **Direct**, arranges its neighborhood, and fits it on screen. Drag the canvas to pan, scroll to zoom, and drag a node to move it. `/` focuses search; arrows pan and plus/minus zoom on the canvas. **All** shows the full graph; **Direct** hides unrelated nodes and connections; **Nearby** adds a faded second hop. Both local views rearrange automatically. **Rearrange** lays out the visible graph again, and **Fit** adjusts its zoom. Select a node before picking one of its incident edges; ambiguous overlapping curves cannot be picked.
 
-The left sidebar contains the version and checkbox trees. **Recipes → Crafting** includes shaped, shapeless and special crafting recipes; other stations have their own branches. Disabling a parent disables every child. Membership, Gathering, Loot, Uses, Status effects and Spawning are separate roots. Spawn eggs, buckets, constructed mobs and status-effect spawning can be filtered separately. **Show self-loops** starts off; it hides edges from a node to itself without deleting their records. Node filters include all five node kinds. Loose nodes keep their grid layout without a surrounding box or title.
+On phones, the graph fills the screen. **Search nodes** and **Filters** open touch-sized bottom panels; selecting a search result returns to the graph. Tap the selected node's **Details** strip to inspect relationships, then close the panel to continue exploring with the selection intact. Drag to pan and pinch to zoom. Desktop sidebars keep their existing layout.
+
+The left sidebar contains the version and checkbox trees. **Recipes → Crafting** includes shaped, shapeless and special crafting recipes; other stations have their own branches. Disabling a parent disables every child. Membership, Gathering, Loot, Uses, Status effects, Spawning, Interactions and Experience are separate roots. Spawn eggs, buckets, constructed mobs and status-effect spawning can be filtered separately. **Show self-loops** starts off; it hides edges from a node to itself without deleting their records. Node filters include every represented kind, including **Other entities** for the Experience Orb. Loose nodes keep their grid layout without a surrounding box or title.
 
 ## Included data
 
@@ -29,12 +31,13 @@ The left sidebar contains the version and checkbox trees. **Recipes → Crafting
 | Actual mob types | 90 |
 | Additional blocks without inventory items | 70 |
 | Registered status effects plus Burning | 41 |
+| Additional non-mob entities (Experience Orb) | 1 |
 | Official recipe JSON files | 2,042 |
 | Additional workstation operations | 1,140 |
 | Total recipe records | 3,182 |
 | Original directed item recipe connections | 25,594 |
-| Generic relationship records | 4,696 |
-| Total directed connections | 45,830 |
+| Generic relationship records | 4,951 |
+| Total directed connections | 46,319 |
 
 The inventory comes from the game's own data generator and item registry, so unobtainable items and items without recipes remain present. Every recipe JSON in the verified client is retained and mapped, including crafting, cooking, stonecutting, smithing, brewing, and dynamic crafting serializers. Nested item tags expand to their actual alternatives. Shaped layouts, input/output quantities, optional ingredients, potion predicates, and component-dependent conditions remain attached to recipe records.
 
@@ -51,6 +54,8 @@ Recipe edges mean **this ingredient participates in this complete recipe**, with
 All 40 registered status effects have official icons and game-derived metadata; **Burning** is explicitly labeled as an entity state rather than a registered effect. Conditional links cover food and potion effects, tipped arrows, beacons and conduits, mob attacks and auras, immunity, effect removal, death protection and effect consequences. A potion→effect edge requires its recorded contents; water and empty potion variants do not grant every effect. Witch attacks link to the appropriate potion item with its contents, then the item links to the effect. Oozing→Slime and Infested→Silverfish are effect consequences, rather than bottle→mob edges. Oozing brewing uses a Slime Block, and curing a Zombie Villager uses Weakness plus an ordinary Golden Apple.
 
 Uses and spawning include actual spawn-egg and mob-bucket mappings, thrown eggs, constructed golems/Withers, Creaking Hearts, egg blocks, feeding, breeding, taming, healing, equipment, fuels, mining rules, block transformations, copper waxing/weathering and tool-target interactions. Mob behaviors include conversions, infection, predators, repellents, pollination, hive use and copper golem statue activation. Bone Meal targets come from all registered `BonemealableBlock` implementations, and crop-growing links retain their conditional harvest loot. Edible, equippable and placeable capabilities appear in node details without inventing Player or action nodes. A food component used by mobs does not necessarily mean the player can eat the item. Multi-input requirements, alternatives, world state and game rules remain on the full relationship records.
+
+Experience Orbs are non-mob entities. Conditional XP sources include qualifying mob kills, mining, all positive-XP furnace/blast-furnace/smoker recipes, breeding, fishing, Bottles o' Enchanting and grindstone disenchanting. Campfire cooking grants no XP, and mobs with zero death XP have no kill link. Living coral, coral fans (including wall states) and coral blocks point to the matching dead form when their placed water check fails; there is no reverse revival link. Coral targets and ordinary block XP ranges come directly from the registered game classes. Custom XP rules and the zero-XP mob exceptions are audited for 26.3.
 
 [data/provenance.json](data/provenance.json) records sources, checksum, counts, and coverage limits. [Mojang's release notes](https://www.minecraft.net/en-us/article/minecraft-java-edition-26-3) describe this version.
 

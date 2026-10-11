@@ -4,6 +4,60 @@ const $ = id => document.getElementById(id);
 const canvas = $('graph'), ctx = canvas.getContext('2d');
 const number = value => value.toLocaleString();
 const state = { graph: null, index: null, version: null, types: new Set(), positions: new Map(), selected: null, selectedEdge: null, mode: 'all', showSelfLoops: false, kinds: new Set(), query: '', limit: 60, view: null, base: null, groups: [], neighbors: new Set(), images: new Map(), camera: { x: 0, y: 0, zoom: 1 }, width: 1, height: 1, frame: null, hover: null, pointers: new Map(), gesture: null, ready: false };
+const mobile = matchMedia('(max-width: 620px), (max-width: 950px) and (max-height: 500px) and (pointer: coarse)');
+const mobilePanel = $('mobile-panel');
+let panelOrigin = null;
+
+function restoreMobilePanel() {
+  if (!panelOrigin) return;
+  const { node, parent, next } = panelOrigin;
+  parent.insertBefore(node, next); panelOrigin = null;
+}
+
+function closeMobilePanel() {
+  restoreMobilePanel();
+  if (mobilePanel.open) mobilePanel.close();
+}
+
+function openMobilePanel(kind) {
+  if (!mobile.matches || mobilePanel.open || !state.ready) return;
+  const node = kind === 'details' ? $('details') : document.querySelector('.sidebar');
+  panelOrigin = { node, parent: node.parentNode, next: node.nextSibling };
+  mobilePanel.dataset.panel = kind;
+  $('mobile-panel-title').textContent = { search: 'Search nodes', filters: 'Filters', details: 'Details' }[kind];
+  $('mobile-panel-content').append(node);
+  mobilePanel.showModal();
+  if (kind === 'search') { $('search').focus(); renderSearch(); }
+  $('mobile-panel-content').scrollTop = 0;
+}
+
+function syncMobileSelection() {
+  const selected = Boolean(state.selected || state.selectedEdge);
+  $('mobile-selection').hidden = !mobile.matches || !selected;
+  document.body.classList.toggle('mobile-has-selection', mobile.matches && selected);
+  if (!mobile.matches) return;
+  if (!selected) {
+    if (mobilePanel.dataset.panel === 'details') closeMobilePanel();
+    return;
+  }
+  const node = state.index.nodes.get(state.selected);
+  const button = $('mobile-details');
+  button.replaceChildren();
+  if (node && !state.selectedEdge) button.append(icon(node));
+  button.append(element('span', 'mobile-selection-name', state.selectedEdge ? 'Selected connection' : node.name), element('span', 'mobile-details-label', 'Details ›'));
+}
+
+$('mobile-search').addEventListener('click', () => openMobilePanel('search'));
+$('mobile-filters').addEventListener('click', () => openMobilePanel('filters'));
+$('mobile-details').addEventListener('click', () => openMobilePanel('details'));
+$('mobile-clear').addEventListener('click', clearSelection);
+$('mobile-panel-close').addEventListener('click', closeMobilePanel);
+mobilePanel.addEventListener('close', () => { if (!mobilePanel.open) restoreMobilePanel(); });
+mobilePanel.addEventListener('click', event => {
+  const r = mobilePanel.getBoundingClientRect();
+  if (event.target === mobilePanel && (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom)) closeMobilePanel();
+});
+mobile.addEventListener('change', () => { closeMobilePanel(); if (state.graph) syncMobileSelection(); });
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -74,6 +128,7 @@ function updateView(shouldFit = false) {
     if (state.selected) renderItemDetails();
     else { $('details').classList.remove('has-selection'); $('details').replaceChildren(state.emptyDetails.cloneNode(true)); populateStarters(); }
   }
+  syncMobileSelection();
   if (state.mode !== 'all' && state.selected && state.ready) relayout();
   else if (shouldFit && state.ready) fit();
   requestDraw();
@@ -182,7 +237,7 @@ function buildTypeFilters() {
   const nodeContainer = $('node-filters'); nodeContainer.replaceChildren(); state.nodeInputs = [];
   const kinds = new Map();
   for (const node of state.graph.nodes) kinds.set(nodeKind(node), (kinds.get(nodeKind(node)) || 0) + 1);
-  const kindLabels = { item: 'Items', category: 'Categories', mob: 'Mobs', block: 'Blocks', effect: 'Status effects' };
+  const kindLabels = { item: 'Items', category: 'Categories', mob: 'Mobs', block: 'Blocks', effect: 'Status effects', entity: 'Other entities' };
   for (const [kind, count] of kinds) {
     const label = element('label', 'filter-label'), checkbox = element('input'); checkbox.type = 'checkbox'; checkbox.value = kind;
     checkbox.setAttribute('aria-label', `Show ${kindLabels[kind] || kind} nodes`);
@@ -207,6 +262,7 @@ function selectNode(id, moveCamera = false, mode = null) {
   const node = state.index?.nodes.get(id);
   if (!node || !availableAt(node, state.version) || !state.kinds.has(nodeKind(node))) return;
   state.selected = id; state.selectedEdge = null;
+  if (mobilePanel.open && mobilePanel.dataset.panel === 'search') closeMobilePanel();
   if (mode) state.mode = mode;
   $('search-results').hidden = true;
   history.replaceState(null, '', `#${encodeURIComponent(id)}`);
@@ -530,6 +586,7 @@ function selectEdge(group) {
   container.append(illustration, element('h2', 'edge-detail-title', relationshipPath(group.type, group.category).join(' / ')));
   container.append(element('p', 'edge-explanation', `${number(group.edges.length)} connections share this curve. All underlying relationships are preserved below.`));
   appendRelationships(container, group.edges, 'outgoing'); requestDraw();
+  syncMobileSelection();
 }
 
 function requestDraw() {
@@ -569,8 +626,8 @@ function nodePath(node, position, radius) {
 
 function focusGeometry(id) {
   const focused = state.selected && state.mode !== 'all' && state.view.depth.get(id) <= 1;
-  return { focused, radius: focused ? Math.max(18, 14 / state.camera.zoom) : 18,
-    imageSize: focused ? Math.max(26, 18 / state.camera.zoom) : 26 };
+  return { focused, radius: focused ? Math.max(18, (mobile.matches ? 20 : 14) / state.camera.zoom) : 18,
+    imageSize: focused ? Math.max(26, (mobile.matches ? 26 : 18) / state.camera.zoom) : 26 };
 }
 
 function drawEdge(group, highlighted = false) {
@@ -672,9 +729,10 @@ function fit() {
     minY = Math.min(minY, p.y - 45); maxY = Math.max(maxY, p.y + 45);
   }
   const availableWidth = availableCanvasWidth();
-  const width = Math.max(1, availableWidth - 70), height = Math.max(1, state.height - 150);
+  const top = mobile.matches ? 130 : 85, bottom = mobile.matches ? (state.selected || state.selectedEdge ? 140 : 75) : 65;
+  const width = Math.max(1, availableWidth - 70), height = Math.max(1, state.height - top - bottom);
   const zoom = Math.min(1.4, width / (maxX - minX || 1), height / (maxY - minY || 1));
-  state.camera = { zoom, x: availableWidth / 2 - (minX + maxX) / 2 * zoom, y: (state.height + 20) / 2 - (minY + maxY) / 2 * zoom };
+  state.camera = { zoom, x: availableWidth / 2 - (minX + maxX) / 2 * zoom, y: (state.height + top - bottom) / 2 - (minY + maxY) / 2 * zoom };
   requestDraw();
 }
 
@@ -695,7 +753,7 @@ function hitNode(point) {
   let closest = null, distance = Infinity;
   for (const node of state.view.nodes) {
     const p = state.positions.get(node.id); if (!p) continue;
-    const geometry = focusGeometry(node.id), radius = geometry.focused ? geometry.radius + 2 / state.camera.zoom : Math.max(20, 9 / state.camera.zoom);
+    const geometry = focusGeometry(node.id), radius = geometry.focused ? geometry.radius + 2 / state.camera.zoom : Math.max(20, (mobile.matches ? 22 : 9) / state.camera.zoom);
     const d = Math.hypot(p.x - world.x, p.y - world.y);
     if (d < radius && d < distance) { closest = node; distance = d; }
   }
@@ -812,7 +870,7 @@ canvas.addEventListener('keydown', event => {
   else if (event.key === 'Escape') clearSelection();
 });
 document.addEventListener('keydown', event => {
-  if (event.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) { event.preventDefault(); $('search').focus(); }
+  if (event.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) { event.preventDefault(); if (mobile.matches) openMobilePanel('search'); else $('search').focus(); }
 });
 $('search').addEventListener('input', event => { state.query = event.target.value; state.limit = 30; renderSearch(); });
 $('search').addEventListener('focus', () => { if (state.base) renderSearch(); });
@@ -847,7 +905,7 @@ new ResizeObserver(entries => {
   const dpr = Math.min(devicePixelRatio || 1, 2);
   canvas.width = Math.round(rect.width * dpr); canvas.height = Math.round(rect.height * dpr);
   state.camera.x += (rect.width - oldWidth) / 2; state.camera.y += (rect.height - oldHeight) / 2;
-  if (state.ready && state.mode !== 'all' && state.selected && !state.focusWorker) fit();
+  if (state.ready && !state.focusWorker && (mobile.matches || (state.mode !== 'all' && state.selected))) fit();
   requestDraw();
 }).observe(canvas);
 
@@ -875,6 +933,7 @@ async function load() {
     worker.terminate(); state.positions = new Map(layout.positions.map(position => [position.id, position]));
     state.fullPositions = state.positions;
     state.ready = true; $('loading').hidden = true; updateView(true);
+    $('mobile-search').disabled = false; $('mobile-filters').disabled = false;
     let initialId;
     try { initialId = decodeURIComponent(location.hash.slice(1)); } catch { initialId = ''; }
     if (state.index.nodes.has(initialId)) selectNode(initialId, true);

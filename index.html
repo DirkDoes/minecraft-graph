@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Explore Minecraft items, categories, mobs, status effects, and their relationships from the game.">
   <title>Minecraft Atlas</title>
@@ -29,6 +29,18 @@
     </section>
     <aside id="details" class="details" aria-label="Selected node and relationships"><div class="empty-details"><p>Select a node to inspect its relationships.</p><div id="starter-items" class="starter-items"></div></div></aside>
   </main>
+  <nav class="mobile-toolbar" aria-label="Graph tools">
+    <button id="mobile-search" aria-haspopup="dialog" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>Search nodes…</button>
+    <button id="mobile-filters" aria-haspopup="dialog" disabled>Filters</button>
+  </nav>
+  <div id="mobile-selection" class="mobile-selection" hidden>
+    <button id="mobile-details" aria-haspopup="dialog"></button>
+    <button id="mobile-clear" aria-label="Clear selection">×</button>
+  </div>
+  <dialog id="mobile-panel" class="mobile-sheet" aria-labelledby="mobile-panel-title">
+    <div class="mobile-sheet-header"><h2 id="mobile-panel-title"></h2><button id="mobile-panel-close" aria-label="Close panel" autofocus>×</button></div>
+    <div id="mobile-panel-content" class="mobile-sheet-content"></div>
+  </dialog>
   <script type="module" src="app.js"></script>
 </body>
 </html>
